@@ -1,0 +1,294 @@
+.navbar {
+  background: linear-gradient(135deg, #3773e3 0%, #db83ed 100%) !important;
+  padding: 1rem 0;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 1100;
+}
+
+.navbar-brand {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: white !important;
+  letter-spacing: 1px;
+  transition: transform 0.3s;
+}
+
+.navbar-brand:hover {
+  transform: scale(1.05);
+}
+
+.navbar-brand span {
+  color: #ffd700;
+  font-size: 2rem;
+}
+
+/* Nav Links */
+.nav-link {
+  color: rgba(255, 255, 255, 0.9) !important;
+  font-weight: 500;
+  padding: 0.5rem 1rem !important;
+  margin: 0 0.2rem;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.nav-link:hover {
+  color: white !important;
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+
+.nav-item.active .nav-link {
+  color: white !important;
+  background: rgba(255, 255, 255, 0.2);
+  font-weight: 600;
+}
+
+.nav-item.active .nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 2px;
+  background: #ffd700;
+}
+
+/* Dropdown menu styling to match the navbar theme */
+.nav-item.dropdown .nav-link.dropdown-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255,255,255,0.95) !important;
+}
+
+.nav-item.dropdown.active .nav-link.dropdown-toggle {
+  background: rgba(255,255,255,0.12);
+  color: white !important;
+  font-weight: 600;
+}
+
+.dropdown-menu {
+  background: linear-gradient(180deg, rgba(12,30,60,0.98), rgba(18,42,78,0.98));
+  border: none;
+  border-radius: 8px;
+  padding: 6px 0;
+  min-width: 200px;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.35);
+}
+
+.dropdown-menu li { list-style: none; }
+
+.dropdown-item {
+  color: rgba(255,255,255,0.92) !important;
+  padding: 8px 14px;
+  transition: background 0.18s ease, transform 0.18s ease;
+}
+
+.dropdown-item:hover, .dropdown-item:focus {
+  background: rgba(255,255,255,0.06) !important;
+  color: white !important;
+  transform: translateX(4px);
+}
+
+.dropdown-item:active {
+  background: rgba(255,255,255,0.09) !important;
+}
+
+/* Make sure images/icons inside dropdown items stay white-tinted */
+.dropdown-item img { filter: brightness(0) invert(1); }
+
+/* Mobile: dropdown becomes full-width block for easier tapping */
+@media (max-width: 767px) {
+  .dropdown-menu {
+    position: static !important;
+    box-shadow: none;
+    background: transparent;
+    padding-left: 0;
+  }
+  .dropdown-item { padding-left: 0.75rem; padding-right: 0.75rem; }
+}
+
+
+
+/* Tắt hiệu ứng hover cho avatar */
+.nav-link img {
+  transition: none;
+}
+
+.nav-link:hover img {
+  transform: none;
+  filter: none;
+}
+
+
+.navbar form.d-flex {
+  width: 100%;
+  max-width: 300px;
+}
+
+.navbar .form-control {
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border-radius: 25px;
+  padding: 0.5rem 1rem;
+  transition: all 0.3s;
+}
+
+.navbar .form-control:focus {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.6);
+  color: white;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+}
+
+.navbar .form-control::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.navbar .btn {
+  background: linear-gradient(135deg, #0f2847 0%, #1a3a5c 100%) !important;
+  color: white !important;
+  border: none;
+  border-radius: 25px;
+  padding: 0.5rem 1.5rem;
+  font-weight: 500;
+  transition: all 0.3s;
+  white-space: nowrap;
+}
+
+.navbar .btn:hover {
+  background: linear-gradient(135deg, #1a3a5c 0%, #0f2847 100%) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Hamburger Menu */
+.navbar-toggler {
+  border-color: rgba(255, 255, 255, 0.5);
+  padding: 0.5rem;
+}
+
+.navbar-toggler:focus {
+  box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.3);
+}
+
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.9%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+/* Responsive Styles */
+@media (max-width: 767px) {
+  .navbar {
+    padding: 0.5rem 0;
+  }
+
+  .navbar-brand {
+    font-size: 1.5rem;
+  }
+
+  .nav-link {
+    padding: 0.7rem 1rem !important;
+    margin: 0.2rem 0;
+  }
+
+  .navbar form.d-flex {
+    max-width: 100%;
+  }
+
+  .navbar .btn {
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+
+  .navbar-nav.ms-3 {
+    flex-direction: row;
+    justify-content: center;
+    margin: 1rem 0 !important;
+  }
+
+  .navbar-nav.ms-3 li {
+    margin: 0 1rem;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  .navbar form.d-flex {
+    max-width: 200px;
+  }
+}
+
+/* Animation khi scroll */
+.navbar.scrolled {
+  padding: 0.5rem 0;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Hover effect cho toàn bộ navbar */
+.navbar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, 
+    #ffd700 0%, 
+    #fff 25%, 
+    #ffd700 50%, 
+    #fff 75%, 
+    #ffd700 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 3s linear infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Cart badge */
+.cart-link { position: relative; }
+.cart-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: #dc3545;
+  color: #fff;
+  font-size: 0.65rem;
+  padding: 2px 6px;
+  border-radius: 999px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  transform-origin: center;
+}
+
+/* pulse animation when items exist */
+.cart-link.has-items img {
+  animation: cartPulse 1s ease-in-out infinite;
+}
+
+@keyframes cartPulse {
+  0% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-3px) scale(1.05); }
+  100% { transform: translateY(0) scale(1); }
+}
+.navbar .container,
+.navbar .navbar-collapse,
+.navbar-nav {
+  display: flex;
+  align-items: center;
+}

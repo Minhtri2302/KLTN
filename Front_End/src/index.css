@@ -1,0 +1,53 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* Responsive utilities: scale media to container and improve touch targets */
+img, picture, svg, video, iframe {
+  max-width: 100%;
+  height: auto;
+  display: block; /* avoid inline gaps */
+}
+
+/* Make interactive elements easier to tap on small screens */
+button, .btn, input[type="button"], input[type="submit"], a.button {
+  min-height: 44px; /* recommended minimum touch target */
+  -webkit-tap-highlight-color: rgba(0,0,0,0.06);
+}
+
+/* Ensure form controls are legible on small devices */
+input, select, textarea {
+  font-size: 1rem;
+}
+
+/* Make long tables horizontally scrollable on small screens */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Utility: avoid fixed-width elements causing layout overflow */
+.no-overflow {
+  max-width: 100%;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+/* Small screen adjustments */
+@media (max-width: 576px) {
+  /* Reduce paddings to fit content better on very small screens */
+  body {
+    font-size: 15px;
+  }
+}

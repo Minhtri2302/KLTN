@@ -1,0 +1,111 @@
+/* Checkout specific styles */
+.checkout-order-list .list-group-item {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.checkout-thumb {
+  width: 72px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+
+.checkout-order-list .item-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.checkout-order-list .item-info strong {
+  font-size: 1rem;
+}
+
+.checkout-order-list .qty {
+  color: #6c757d;
+}
+
+@media (max-width: 768px) {
+  .checkout-thumb { width: 56px; height: 44px; }
+}
+
+/* Success overlay */
+.order-success-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+.order-success-card {
+  background: #fff;
+  padding: 28px;
+  border-radius: 12px;
+  width: 520px;
+  max-width: 92%;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.18);
+}
+.order-success-card .tick {
+  width: 84px;
+  height: 84px;
+  margin: 0 auto 12px auto;
+  border-radius: 50%;
+  background: linear-gradient(135deg,#2ecc71 0%,#1e8449 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 44px;
+  box-shadow: 0 8px 20px rgba(46,204,113,0.18);
+}
+.order-success-card h3 { margin-top: 6px; margin-bottom: 6px; }
+.order-success-card p { color: #555; margin-bottom: 14px; }
+.order-success-actions { display:flex; gap:12px; justify-content:center; }
+
+/* Address selection styles */
+.selected-address-card {
+  background: #f8f9fa;
+  transition: all 0.3s ease;
+}
+
+.selected-address-card:hover {
+  background: #e9ecef;
+}
+
+.selected-address-card .badge {
+  font-size: 0.7rem;
+  padding: 3px 8px;
+}
+
+.selected-address-card strong {
+  font-size: 1rem;
+  color: #333;
+}
+
+.selected-address-card .text-muted {
+  font-size: 0.9rem;
+  color: #666 !important;
+}
+
+.btn-outline-primary {
+  border-color: #007bff;
+  color: #007bff;
+}
+
+.btn-outline-primary:hover {
+  background: #007bff;
+  color: white;
+}
+
+.btn-outline-secondary {
+  font-size: 0.875rem;
+}
+
+.btn-outline-danger {
+  font-size: 0.875rem;
+}
+

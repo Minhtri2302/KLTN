@@ -1,0 +1,57 @@
+/* User Footer Styles */
+.user-footer {
+  background: linear-gradient(#3f6386, #9249b5) !important;
+  color: #ecf0f1 !important;
+  border-top: 3px solid #3498db;
+  margin-top: 50px;
+  padding: 3rem 0;
+}
+
+.user-footer h5 {
+  color: #3498db;
+  font-weight: bold;
+  margin-bottom: 15px;
+  font-size: 18px;
+}
+
+.user-footer p {
+  color: #ecf0f1;
+  font-size: 14px;
+  line-height: 1.8;
+  margin-bottom: 10px;
+}
+
+.user-footer a {
+  color: #ecf0f1 !important;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.user-footer a:hover {
+  color: #3498db !important;
+  text-decoration: none;
+}
+
+.user-footer-copyright {
+  color: #95a5a6;
+  font-size: 13px;
+  padding-top: 20px;
+  border-top: 1px solid #34495e;
+  text-align: center;
+  margin-top: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .user-footer .col-md-4 {
+    margin-bottom: 30px;
+  }
+  
+  .user-footer h5 {
+    font-size: 16px;
+  }
+  
+  .user-footer p {
+    font-size: 13px;
+  }
+}

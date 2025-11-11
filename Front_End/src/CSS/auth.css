@@ -1,0 +1,111 @@
+/* --- NỀN TOÀN TRANG (rõ nét, không mờ) --- */
+.auth-wrapper-alt {
+  width: 100vw;
+  height: 100vh;
+  background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1950&q=80')
+    no-repeat center center/cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+/* Chỉ phủ một lớp tối nhẹ để chữ dễ đọc */
+.auth-wrapper-alt::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.4); /* nền tối nhẹ, KHÔNG làm mờ */
+  z-index: 0;
+}
+
+/* --- FORM ĐĂNG NHẬP / ĐĂNG KÝ TRONG SUỐT --- */
+.auth-card-alt {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 400px;
+  padding: 40px 35px;
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.12); /* trong suốt nhẹ */
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
+  color: #fff;
+  text-align: center;
+  animation: fadeIn 0.8s ease;
+  border: 1px solid rgba(255, 255, 255, 0.25); /* viền sáng nhẹ */
+}
+
+/* Tiêu đề */
+.auth-card-alt h2 {
+  margin-bottom: 25px;
+  font-size: 28px;
+  font-weight: 600;
+}
+
+/* Ô nhập */
+.auth-input {
+  width: 100%;
+  padding: 12px 15px;
+  margin: 10px 0;
+  border: none;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.25);
+  color: #fff;
+  outline: none;
+  font-size: 15px;
+  transition: background 0.3s;
+}
+
+.auth-input::placeholder {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.auth-input:focus {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+/* Nút đăng nhập */
+.auth-button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #ff416c, #ff4b2b);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: 0.3s;
+}
+
+.auth-button:hover {
+  background: linear-gradient(90deg, #ff4b2b, #ff416c);
+  transform: translateY(-2px);
+}
+
+/* Thông báo lỗi / thành công */
+.auth-message {
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+/* Link đăng ký */
+.auth-link {
+  display: block;
+  margin-top: 15px;
+  color: #ddd;
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.auth-link:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+/* Hiệu ứng xuất hiện mượt */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}

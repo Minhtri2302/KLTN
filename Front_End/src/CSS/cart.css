@@ -1,0 +1,175 @@
+.cart-page, .checkout-page {
+  padding: 2rem 0;
+}
+
+.cart-container {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 2rem;
+  align-items: start;
+}
+
+.cart-list {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+}
+
+.cart-item {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  padding: 12px 8px;
+  border-bottom: 1px solid #f1f3f5;
+}
+
+.cart-item:last-child { border-bottom: none; }
+
+.cart-item img {
+  width: 110px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+
+.cart-item-info {
+  flex: 1;
+}
+
+.cart-item-name {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.cart-item-meta {
+  color: #6c757d;
+  font-size: 0.93rem;
+}
+
+.cart-item-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.cart-qty-input {
+  width: 72px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1px solid #e9ecef;
+  text-align: center;
+}
+
+.cart-remove-btn {
+  background: transparent;
+  border: none;
+  color: #dc3545;
+  cursor: pointer;
+}
+
+.cart-summary {
+  background: linear-gradient(180deg, #ffffff, #f8fafc);
+  padding: 18px;
+  border-radius: 12px;
+  border: 1px solid rgba(0,0,0,0.04);
+  box-shadow: 0 8px 24px rgba(14, 30, 37, 0.04);
+  position: sticky;
+  top: 20px;
+}
+
+.cart-summary h4 {
+  margin: 0 0 8px 0;
+}
+
+.cart-summary .line {
+  display: flex;
+  justify-content: space-between;
+  margin: 8px 0;
+  color: #495057;
+}
+
+.cart-summary .subtotal {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+/* Nút chính cart: gọn, bo tròn vừa, font nhỏ hơn */
+.cart-summary .checkout-btn {
+  margin-top: 12px;
+  width: 100%;
+  padding: 8px 0;
+  border-radius: 7px;
+  background: linear-gradient(135deg, #7e5aea 0%, #d030e2 100%);
+  color: #fff;
+  border: none;
+  font-weight: 700;
+  font-size: 1rem;
+  min-width: 0;
+  min-height: 0;
+  box-shadow: 0 4px 10px rgba(25,135,84,0.10);
+  transition: transform 0.18s, box-shadow 0.18s, filter 0.18s;
+}
+.cart-summary .checkout-btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(0.98);
+}
+
+.cart-footer-buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 12px;
+}
+
+/* Nút xóa cart: gọn, bo tròn vừa, font nhỏ hơn */
+.cart-clear-btn {
+  background: linear-gradient(135deg, #ea53ea 0%, #df2180 100%);
+  color: #fff;
+  border: none;
+  border-radius: 7px;
+  padding: 8px 18px;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform 0.18s, box-shadow 0.18s, filter 0.18s;
+  display: inline-block;
+  min-width: 0;
+  min-height: 0;
+  line-height: 1.2;
+  box-shadow: 0 4px 10px rgba(216,66,66,0.10);
+  margin-left: 0;
+}
+.cart-clear-btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(0.98);
+}
+
+.empty-cart-illustration {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  color: #6c757d;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.04);
+}
+
+@media (max-width: 990px) {
+  .cart-container { grid-template-columns: 1fr; }
+  .cart-summary { position: relative; top: auto; }
+  .cart-item img { width: 90px; height: 64px; }
+}
+
+@media (max-width: 576px) {
+  .cart-item { gap: 8px; padding: 10px 6px; }
+  .cart-item img { width: 72px; height: 56px; }
+  .cart-qty-input { width: 60px; }
+}

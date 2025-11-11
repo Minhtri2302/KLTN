@@ -1,0 +1,817 @@
+/* Custom admin action button color for 'Xem' (btn-info) */
+.btn-info {
+  background: linear-gradient(135deg, #1fa2ff 0%, #12d8fa 100%) !important;
+  color: #fff !important;
+  border: none !important;
+  box-shadow: 0 2px 8px rgba(31,162,255,0.10);
+  transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+.btn-info:hover, .btn-info:focus {
+  background: linear-gradient(135deg, #103268 0%, #02ccf5 100%) !important;
+  color: #fff !important;
+  box-shadow: 0 4px 16px rgba(31,162,255,0.18);
+  transform: translateY(-2px) scale(1.04);
+}
+/* Custom admin action button colors */
+.btn-warning {
+  background: linear-gradient(135deg, #286db3 0%, #a02ac1 100%) !important;
+  color: #fff !important;
+  border: none !important;
+}
+.btn-warning:hover, .btn-warning:focus {
+  background: linear-gradient(135deg, #542994 0%, #d91ac9 100%) !important;
+  color: #fff !important;
+}
+.btn-danger {
+  background: linear-gradient(135deg, #df4d79 0%, #d5888d 100%) !important;
+  color: #fff !important;
+  border: none !important;
+}
+.btn-danger:hover, .btn-danger:focus {
+  background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%) !important;
+  color: #fff !important;
+}
+.admin-dashboard {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  width: 100vw;
+  max-width: 100vw;
+  margin: 0;
+  box-sizing: border-box;
+  padding: 0;
+  padding-top: 120px; /* Space for fixed header */
+}
+
+/* Ensure the app root fills the viewport so admin-dashboard overflow works reliably */
+html, body, #root {
+  height: 100%;
+}
+
+.admin-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 2rem 0;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100vw;
+  z-index: 1000;
+}
+.admin-header .container {
+  width: 100vw;
+  max-width: 100vw;
+  margin: 0;
+  padding: 0 32px;
+}
+.container.pb-5 {
+  width: 100vw;
+  max-width: 100vw;
+  margin: 0;
+  padding: 0 32px;
+  padding-bottom: 3rem;
+  margin-top: 2rem; /* Add spacing below fixed header */
+}
+
+.admin-header h1 {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.admin-header p {
+  margin: 0.5rem 0 0 0;
+  opacity: 0.9;
+}
+
+.stats-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: white;
+  border-radius: 10px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.stat-card h3 {
+  font-size: 0.875rem;
+  color: #000000;
+  margin: 0 0 0.5rem 0;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.stat-card .stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #000000;
+  margin: 0;
+}
+
+.stat-card.products {
+  border-left: 4px solid #667eea;
+}
+
+.stat-card.orders {
+  border-left: 4px solid #f093fb;
+}
+
+.stat-card.users {
+  border-left: 4px solid #4facfe;
+}
+
+.stat-card.revenue {
+  border-left: 4px solid #43e97b;
+}
+
+.admin-tabs {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.admin-tabs .nav-tabs {
+  border-bottom: 2px solid #e9ecef;
+  padding: 0.5rem 1rem;
+  background-color: #f8f9fa;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.admin-tabs .nav-tabs .nav-item {
+  margin-bottom: -2px;
+}
+
+.admin-tabs .nav-tabs .nav-link {
+  border: none;
+  color: #ffffff;
+  background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+  padding: 0.75rem 1.5rem;
+  font-weight: 700;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.admin-tabs .nav-tabs .nav-link:hover {
+  background: linear-gradient(135deg, #1e42e3 0%, #6e39a4 100%);
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.admin-tabs .nav-tabs .nav-link.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #ffffff;
+  border-bottom: 3px solid #667eea;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.tab-content {
+  padding: 2rem;
+}
+
+.tab-content h3 {
+  color: #000000;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+/* Section header for each management table (contains title + add button) */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #ffffff;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  margin-bottom: 1rem;
+}
+.section-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.btn-add-purple {
+  background: linear-gradient(135deg, #764ba2 0%, #9b59b6 100%);
+  border: none;
+  color: #ffffff;
+  padding: 0.75rem 1.2rem;
+  font-weight: 700;
+  border-radius: 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 6px 18px rgba(118,75,162,0.12);
+  font-size: 1.15rem;
+  min-width: 150px;
+  justify-content: center;
+  transition: all 0.2s;
+}
+.btn-add-purple:hover {
+  transform: translateY(-2px);
+}
+
+/* Standardize search input and action button inside section headers */
+.section-header .form-control.form-control-sm {
+  height: 44px; /* consistent height matching the button */
+  padding: 0.5rem 0.75rem;
+  border-radius: 10px;
+  border: 1px solid #e6e6e6;
+  box-shadow: none;
+}
+
+.section-header .btn-add-purple {
+  padding: 0.65rem 1rem;
+  border-radius: 12px;
+  font-size: 1rem;
+  min-width: 150px;
+  justify-content: center;
+}
+
+/* When the section header contains multiple controls, group them */
+.section-header > div:last-child {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+/* Ensure controls layout doesn't squeeze the add button and that the search input grows */
+.section-header > div:last-child .form-control.form-control-sm {
+  flex: 1 1 auto; /* allow input to grow and shrink */
+  min-width: 160px;
+}
+.section-header > div:last-child .btn-add-purple {
+  flex: 0 0 auto; /* prevent the button from shrinking */
+  white-space: nowrap; /* keep label on a single line */
+  min-width: 180px; /* make room for two-word labels */
+}
+
+@media (max-width: 768px) {
+  .section-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  .section-header > div:last-child {
+    justify-content: space-between;
+  }
+  .section-header .form-control.form-control-sm {
+    width: 100%;
+  }
+  .section-header .btn-add-purple {
+    width: auto;
+    max-width: 320px;
+    min-width: 120px;
+    margin: 0 auto;
+    font-size: 1.1rem;
+    padding: 0.7rem 1.2rem;
+    border-radius: 16px;
+    text-align: center;
+    box-sizing: border-box;
+    margin-top: 8px;
+  }
+  .admin-dashboard {
+    padding: 0;
+  }
+  .admin-header .container,
+  .container.pb-5 {
+    padding: 0 8px;
+  }
+}
+
+.tab-content h5 {
+  color: #000000;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.tab-content h6 {
+  color: #000000;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+  font-size: 0.875rem;
+  letter-spacing: 0.5px;
+}
+
+.tab-content p {
+  color: #000000;
+}
+
+.table {
+  font-size: 0.95rem;
+}
+
+/* Make any table wrapped with .table-responsive horizontally scrollable on small devices */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Ensure admin scroll containers are also horizontally scrollable when needed */
+.admin-table-scroll, .product-table-scroll {
+  overflow-x: auto;
+}
+
+.table thead th {
+  font-weight: 600;
+  color: #000000;
+  background-color: #f8f9fa;
+  border-bottom: 2px solid #dee2e6;
+  padding: 1rem 0.75rem;
+  vertical-align: middle;
+}
+
+/* Center text horizontally for table headers and body cells by default */
+.table thead th,
+.table tbody td {
+  text-align: center;
+}
+
+.table tbody td {
+  padding: 0.75rem;
+  vertical-align: middle;
+  color: #000000;
+}
+
+/* Allow table cells to wrap text and break long words/IDs to avoid horizontal scroll */
+.table tbody td {
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+/* Ensure code snippets and links inside tables/tab content use normal dark text color */
+.table tbody td code,
+.tab-content code,
+.tab-content pre,
+.table tbody td a {
+  color: #000000 !important;
+}
+
+.table-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  align-items: middle;
+}
+
+/* Prevent action buttons from wrapping */
+.table-actions {
+  white-space: nowrap;
+}
+
+.table-actions button {
+  padding: 0.25rem 0.75rem;
+  font-size: 0.875rem;
+  white-space: nowrap;
+}
+
+/* Make the action TD a fixed-width flex container so buttons are always
+   right-aligned and vertically centered even when other cells (like image)
+   increase the row height. */
+td.table-actions {
+  width: 180px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-left: 0.75rem;
+  padding-right: 1rem;
+}
+
+/* Ensure status badges (bootstrap .badge) and custom .order-status are
+   vertically centered within their table cell and span the cell height so
+   action buttons (in the action cell) line up with them. */
+.table tbody td .badge,
+.table tbody td .order-status {
+  display: inline-flex;
+  align-items: center;
+  height: 100%;
+}
+
+/* Make sure action buttons visually center inside the td */
+.table-actions .btn {
+  vertical-align: middle;
+}
+
+.modal-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.modal-header .btn-close {
+  filter: brightness(0) invert(1);
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: #000000;
+  font-size: 0.9rem;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #5568d3 0%, #6a4190 100%);
+}
+
+.search-box {
+  margin-bottom: 1.5rem;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.search-box input {
+  flex: 1;
+  max-width: 400px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem;
+  color: #000000;
+}
+
+.empty-state i {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  opacity: 0.3;
+  color: #000000;
+}
+
+.product-image-preview {
+  max-width: 100px;
+  max-height: 100px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+/* Banner thumbnails: constrain size so rows remain consistent and avoid layout shifts */
+.banner-image-preview {
+  max-width: 200px;
+  max-height: 120px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.order-status {
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.order-status[data-status="Chờ xử lý"],
+.order-status option[value="Chờ xử lý"] {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.order-status[data-status="Đang xử lý"],
+.order-status option[value="Đang xử lý"] {
+  background-color: #cfe2ff;
+  color: #084298;
+}
+
+.order-status[data-status="Đã gửi hàng"],
+.order-status option[value="Đã gửi hàng"] {
+  background-color: #d1ecf1;
+  color: #0c5460;
+}
+
+.order-status[data-status="Đã giao"],
+.order-status option[value="Đã giao"] {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.order-status[data-status="Đã hủy"],
+.order-status option[value="Đã hủy"] {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+@media (max-width: 768px) {
+  .stats-cards {
+    grid-template-columns: 1fr;
+  }
+  
+  .admin-header h1 {
+    font-size: 1.5rem;
+  }
+  
+  .search-box {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .search-box input {
+    max-width: 100%;
+  }
+}
+
+/* Vertical sidebar layout */
+.admin-layout {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+}
+
+.admin-sidebar {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 1rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  position: sticky;
+  top: 140px; /* Stick below the fixed header */
+  height: calc(100vh - 160px); /* Full viewport height minus header */
+  overflow-y: auto; /* Allow scrolling if menu is too long */
+  align-self: flex-start; /* Prevent stretching */
+}
+
+.sidebar-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.menu-item, .menu-group {
+  display: block;
+}
+
+.menu-btn, .child-btn {
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  padding: 0.6rem 0.75rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  color: #222;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Remove default link underline and ensure anchors inherit our button styles */
+.menu-btn,
+.menu-btn:link,
+.menu-btn:visited,
+.menu-btn:hover,
+.menu-btn:active {
+  text-decoration: none;
+  color: inherit;
+}
+
+.admin-sidebar a { text-decoration: none; color: inherit; }
+
+/* Improve keyboard focus visibility for accessibility */
+.menu-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(102,126,234,0.12);
+}
+
+.menu-btn:hover, .child-btn:hover {
+  background: rgba(102,126,234,0.08);
+}
+
+.menu-children {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-left: 0.25rem;
+  margin-top: 0.25rem;
+}
+
+.child-btn {
+  padding-left: 1rem;
+  font-weight: 500;
+}
+
+.menu-item .menu-btn.active, .child-btn.active, .menu-children .child-btn.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  box-shadow: 0 6px 18px rgba(102,126,234,0.12);
+}
+
+/* Ensure content area sits nicely next to sidebar */
+.admin-content {
+  min-height: 60vh;
+}
+
+@media (max-width: 992px) {
+  .admin-layout {
+    flex-direction: column;
+  }
+  .admin-sidebar {
+    position: relative;
+    top: 0;
+    height: auto;
+  }
+}
+
+/* Overview panels: side-by-side equal height */
+.overview-panels {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.overview-panel {
+  flex: 1;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  display: flex;
+  flex-direction: column;
+  min-height: 260px; /* reasonable default */
+}
+
+.overview-panel h5 {
+  margin: 1rem;
+  font-size: 1.125rem;
+}
+
+.overview-panel .panel-body {
+  padding: 0 1rem 1rem 1rem;
+  /* make the panel body the scroll container so thead can be sticky */
+  overflow: auto;
+  flex: 1 1 auto;
+  display: block;
+}
+
+.overview-panel .panel-body .table {
+  margin: 0;
+  border-radius: 6px;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* Sticky headers for overview panels and product table */
+.overview-panel .panel-body thead th {
+  position: sticky;
+  top: 0.5rem; /* small offset to account for panel padding */
+  z-index: 6;
+  background: #ffffff; /* ensure header covers content when stuck */
+  box-shadow: inset 0 -1px 0 rgba(0,0,0,0.06);
+}
+.product-table-scroll thead th,
+.admin-table-scroll thead th {
+  position: sticky;
+  top: 0; /* align to container top for full-width tables */
+  z-index: 6;
+  background: #ffffff;
+  box-shadow: inset 0 -1px 0 rgba(0,0,0,0.06);
+}
+
+/* Monospace for order ids to keep layout tidy */
+.mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, 'Roboto Mono', 'Courier New', monospace;
+  font-size: 0.9rem;
+  word-break: break-word;
+}
+
+/* Reduce default min-width for code/ID cells so they don't force wide tables */
+.table tbody td code {
+  display: inline-block;
+  max-width: 100%;
+  word-break: break-all;
+}
+
+@media (max-width: 768px) {
+  .overview-panels {
+    flex-direction: column;
+  }
+  .overview-panel .panel-body tbody {
+    max-height: 220px;
+  }
+}
+
+/* Scroll container for product list in ProductManagement */
+.product-table-scroll {
+  /* Limit height so long product lists scroll underneath the modal or page header */
+  max-height: 520px;
+  overflow-y: auto;
+}
+/* Generic scroll container for admin tables */
+.admin-table-scroll {
+  max-height: 520px;
+  overflow-y: auto;
+}
+@media (max-width: 992px) {
+  .product-table-scroll {
+    max-height: 360px;
+  }
+}
+
+@media (max-width: 992px) {
+  .admin-table-scroll {
+    max-height: 360px;
+  }
+}
+
+/* Footer */
+.admin-footer {
+  background-color: #2c3e50;
+  color: #ecf0f1;
+  padding: 20px 30px;
+  text-align: center;
+  font-size: 14px;
+  border-top: 3px solid #3498db;
+  margin-top: auto;
+}
+
+.admin-footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.admin-footer-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  text-align: left;
+}
+
+.admin-footer-brand {
+  font-size: 18px;
+  font-weight: bold;
+  color: #3498db;
+}
+
+.admin-footer-copyright {
+  font-size: 13px;
+  color: #95a5a6;
+}
+
+.admin-footer-links {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.admin-footer-link {
+  color: #ecf0f1;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  font-size: 14px;
+}
+
+.admin-footer-link:hover {
+  color: #3498db;
+}
+
+@media (max-width: 768px) {
+  .admin-footer-content {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .admin-footer-info {
+    text-align: center;
+  }
+  
+  .admin-footer-links {
+    justify-content: center;
+  }
+}

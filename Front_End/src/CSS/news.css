@@ -1,0 +1,125 @@
+/* News listing and detail styles */
+
+.news-list-container {
+  padding: 20px 0;
+}
+
+.news-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+  align-items: stretch;
+}
+
+.news-card {
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: 6px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  transition: transform .12s ease, box-shadow .12s ease;
+  height: 100%;
+}
+.news-card:hover { transform: translateY(-4px); box-shadow: 0 6px 18px rgba(0,0,0,0.06); }
+
+.news-card .img-wrapper {
+  width: 100%;
+  overflow: hidden;
+  background: #f3f4f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px 6px 0 0;
+  padding: 8px 0;
+}
+.news-card .img-wrapper img {
+  max-width: 100%;
+  max-height: 140px; /* reduced thumbnail height */
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  object-position: center;
+  display: block;
+  transition: opacity .25s ease;
+  opacity: 1;
+  background: #f8fafc;
+}
+
+.news-card .card-body { padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+.news-card .card-title { font-size: 1.05rem; margin: 0; line-height: 1.25; font-weight: 600; }
+.news-excerpt { color: #444; font-size: 0.95rem; line-height: 1.4; margin: 0; flex: 1; }
+
+.news-meta { display:flex; justify-content:space-between; align-items:center; gap:8px; font-size:0.85rem; color:#777; margin-top: auto; }
+.news-meta .author { font-weight:500; color:#333; }
+
+.news-detail-container { padding: 28px 0; }
+.news-detail-hero img, .news-hero-img { width: 100%; height: auto; max-height: 360px; object-fit: contain; object-position: center; border-radius: 6px; margin-bottom: 16px; box-shadow: 0 8px 30px rgba(2,6,23,0.08); background: #f8fafc; }
+.news-detail-title { font-size: 1.9rem; margin-bottom: 8px; }
+.news-detail-meta { color: #666; margin-bottom: 18px; }
+.news-detail-content { font-size: 1rem; line-height: 1.8; color:#222; }
+
+/* responsive tweaks */
+@media (max-width: 768px) {
+  .news-card img { height: 140px; }
+  .news-detail-title { font-size: 1.4rem; }
+}
+
+/* small utility */
+.news-readmore-btn { margin-left: auto; }
+
+/* Rich content styles for article body */
+.news-detail-content {
+  max-width: 900px;
+  margin: 0 auto;
+  padding-top: 8px;
+}
+.news-detail-content p {
+  margin: 0 0 1.2rem;
+  color: #333;
+  font-size: 1.02rem;
+}
+.news-detail-content h1,
+.news-detail-content h2,
+.news-detail-content h3,
+.news-detail-content h4 {
+  margin: 1.1rem 0 0.6rem;
+  line-height: 1.25;
+  color: #111;
+}
+.news-detail-content h2 { font-size: 1.6rem; }
+.news-detail-content h3 { font-size: 1.35rem; }
+.news-detail-content h4 { font-size: 1.12rem; }
+.news-detail-content img { max-width: 100%; height: auto; display: block; margin: 14px 0; border-radius: 6px; }
+.news-img-center { display:block; margin: 14px auto; }
+.news-detail-content figure { margin: 0 0 1rem; }
+.news-detail-content figcaption { font-size: 0.9rem; color: #666; margin-top: 6px; }
+.news-detail-content blockquote {
+  border-left: 4px solid rgba(0,0,0,0.08);
+  padding: 10px 14px;
+  margin: 1rem 0;
+  background: linear-gradient(90deg, rgba(0,0,0,0.01), rgba(0,0,0,0.00));
+  color: #444;
+  font-style: italic;
+}
+.news-detail-content pre {
+  background: #0f1720;
+  color: #e6eef8;
+  padding: 12px;
+  border-radius: 6px;
+  overflow: auto;
+  margin: 1rem 0;
+}
+.news-detail-content code { background: rgba(27,31,35,0.06); padding: 2px 6px; border-radius: 4px; font-family: monospace; }
+.news-detail-content ul, .news-detail-content ol { margin: 0 0 1rem 1.2rem; }
+.news-detail-content table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+.news-detail-content table th,
+.news-detail-content table td { border: 1px solid rgba(0,0,0,0.08); padding: 8px; text-align: left; }
+
+/* make images inside content responsive and centered */
+.news-detail-content .align-center { display: block; margin: 12px auto; }
+
+@media (max-width: 768px) {
+  .news-detail-content { padding: 0 10px; }
+  .news-detail-content h2 { font-size: 1.35rem; }
+}

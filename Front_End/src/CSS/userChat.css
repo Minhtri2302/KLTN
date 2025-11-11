@@ -1,0 +1,195 @@
+/* Shake animation for unread messages */
+@keyframes shake {
+  0% { transform: translateY(0) rotate(0deg); }
+  10% { transform: translateY(-3px) rotate(-2deg); }
+  30% { transform: translateY(3px) rotate(2deg); }
+  50% { transform: translateY(-2px) rotate(-1deg); }
+  70% { transform: translateY(2px) rotate(1deg); }
+  90% { transform: translateY(-1px) rotate(-0.5deg); }
+  100% { transform: translateY(0) rotate(0deg); }
+}
+
+/* Main chat container */
+.userchat-container {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  width: 360px;
+  height: 520px;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  border: 1px solid #eee;
+  z-index: 2000;
+}
+
+/* Header */
+.userchat-header {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  background-color: #ffffff; /* changed to white background */
+  color: #111; /* darker text on white */
+  border-bottom: 1px solid #eee;
+}
+
+.userchat-header-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+  object-fit: cover;
+}
+
+.userchat-header-title {
+  margin: 0;
+  font-size: 18px;
+}
+
+.userchat-username-tag {
+  margin: 0;
+  font-size: 13px;
+  opacity: 0.9;
+}
+
+.userchat-close-button {
+  background: transparent;
+  border: none;
+  color: #333; /* dark close icon on white header */
+  font-size: 22px;
+  cursor: pointer;
+  margin-left: 8px;
+  font-weight: bold;
+}
+
+/* Open button (when chat is closed) */
+.userchat-open-button {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  background-color: #4E8CFF;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  font-size: 22px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.userchat-open-button.unread {
+  animation: shake 0.5s ease-in-out infinite;
+}
+
+/* Unread badge shown on the minimized chat button */
+.userchat-unread-badge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  background: #ff3b30;
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  line-height: 1;
+}
+
+/* Ensure open button is positioned as a containing block for the absolute badge */
+.userchat-open-button {
+  position: fixed;
+  overflow: visible;
+}
+
+/* Chat body */
+.userchat-body {
+  flex-grow: 1;
+  padding: 12px;
+  overflow-y: auto;
+  background-color: #f9f9f9;
+}
+
+/* Message bubble */
+.userchat-msg-bubble {
+  max-width: 70%;
+  padding: 8px 12px;
+  border-radius: 15px;
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+.userchat-msg-bubble.from-me {
+  background-color: #4E8CFF;
+  color: #fff;
+  margin-right: 8px;
+}
+
+.userchat-msg-bubble.from-other {
+  background-color: #E5E5EA;
+  color: #000;
+  margin-left: 8px;
+}
+
+.userchat-msg-author {
+  font-size: 12px;
+  opacity: 0.8;
+  margin-bottom: 3px;
+}
+
+.userchat-msg-time {
+  font-size: 11px;
+  opacity: 0.65;
+  margin-top: 6px;
+}
+
+.userchat-msg-read {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.95);
+  margin-top: 6px;
+  font-weight: 600;
+}
+
+.userchat-msg-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* Input area */
+.userchat-input-area {
+  display: flex;
+  border-top: 1px solid #ddd;
+  padding: 8px;
+  background-color: #fff;
+}
+
+.userchat-input {
+  flex-grow: 1;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  padding: 10px 15px;
+  outline: none;
+  font-size: 14px;
+}
+
+.userchat-send-button {
+  margin-left: 8px;
+  background-color: #4E8CFF;
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 16px;
+  cursor: pointer;
+  font-weight: bold;
+}

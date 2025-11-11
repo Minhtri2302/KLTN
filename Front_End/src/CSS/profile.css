@@ -1,0 +1,78 @@
+:root{
+  --primary:#6f42c1;
+  --muted:#6c757d;
+}
+.profile-container{
+  padding-top:16px;
+}
+.profile-tabs{
+  display:flex;
+  gap:8px;
+  margin-bottom:16px;
+}
+.profile-tabs button{
+  background:transparent;
+  border:1px solid #e2e6ea;
+  padding:8px 14px;
+  border-radius:6px;
+  cursor:pointer;
+  color:#333;
+}
+.profile-tabs button.active{
+  background:linear-gradient(90deg,var(--primary),#9b5de5);
+  color:#fff;
+  border-color:transparent;
+}
+.profile-card{
+  border:1px solid #e9ecef;
+  border-radius:8px;
+  box-shadow:0 1px 2px rgba(0,0,0,0.03);
+}
+.profile-card .card-body{padding:16px}
+.profile-info p{margin-bottom:6px}
+.order-list .card{border:1px solid #f1f3f5}
+
+/* Address list styles */
+.address-list {
+  margin-top: 16px;
+}
+
+.address-item {
+  transition: all 0.3s ease;
+}
+
+.address-item:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.address-item .card-body {
+  padding: 20px;
+}
+
+.address-item strong {
+  color: #333;
+  font-size: 1.1rem;
+}
+
+.address-item .text-muted {
+  color: #666 !important;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.address-item .badge {
+  font-size: 0.7rem;
+  padding: 4px 10px;
+  font-weight: 500;
+}
+
+.address-item .btn-sm {
+  font-size: 0.875rem;
+  padding: 6px 12px;
+  min-width: 100px;
+}
+
+@media (min-width:768px){
+  .profile-tabs{justify-content:flex-start}
+}

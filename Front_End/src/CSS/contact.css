@@ -1,0 +1,7 @@
+/* Simple contact page styles */
+.contact-page h2 { margin-bottom: 0.5rem; }
+.contact-page p { color: #555; }
+.contact-form { background: #fff; padding: 1rem; border-radius: 8px; box-shadow: 0 6px 20px rgba(0,0,0,0.05); }
+.contact-info { background: linear-gradient(90deg,#f7f9fc,#eef3f9); border-radius:8px; }
+.contact-info h5 { margin-bottom: 0.8rem; }
+.contact-form .btn-primary { background: linear-gradient(90deg,#0069d9,#0056b3); border-color: #0056b3; }
