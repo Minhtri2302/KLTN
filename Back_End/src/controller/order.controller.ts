@@ -28,7 +28,7 @@ class OrderController {
 
       const result = await orderService.createOrder(accountId, body, user);
       
-      return reply.status(201).send({ 
+      return reply.status(200).send({ 
         success: true,
         message: 'Order created successfully',
         ...result 

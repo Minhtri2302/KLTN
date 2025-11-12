@@ -41,7 +41,7 @@ export const createBanner = async (
 ) => {
   try {
     const savedBanner = await bannerService.createBanner(req.body);
-    return reply.code(201).send(savedBanner);
+    return reply.code(200).send(savedBanner);
   } catch (error) {
     return reply.code(400).send({ message: "Error creating banner", error });
   }

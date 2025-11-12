@@ -8,7 +8,7 @@ export const createContact = async (
 ) => {
   try {
     const doc = await contactService.createContact(req.body);
-    return reply.status(201).send(doc);
+    return reply.status(200).send(doc);
   } catch (err: any) {
     console.error('createContact', err);
     if (err.status) {

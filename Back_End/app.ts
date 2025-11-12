@@ -1,6 +1,8 @@
 import Fastify from 'fastify';
 import dotenv from 'dotenv';
 import { connectDB } from './src/config/db.ts';
+
+// route
 import categoryRoutes from './src/route/category.route.ts';
 import  productRoute  from './src/route/product.route.ts';
 import bannerRoute from './src/route/banner.route.ts';
@@ -15,9 +17,6 @@ import cors from '@fastify/cors';
 import multipart from '@fastify/multipart';
 import uploadRoutes from './src/route/upload.route.ts';
 import { registerSocket } from './src/utils/socket.ts';
-
-
-
 import chatRoutes from './src/route/message.route.ts';
 
 // Load biến môi trường
@@ -33,9 +32,8 @@ connectDB().then(() => {
 
 const fastify = Fastify({ logger: true });
 
-// Đăng ký multipart TRƯỚC routes để các route nhận multipart/form-data
-fastify.register(multipart);
 // Đăng ký routes
+fastify.register(multipart);
 fastify.register(categoryRoutes, { prefix: '/category' });
 fastify.register(productRoute, { prefix: '/products' });
 fastify.register(bannerRoute, { prefix: '/banners' });
@@ -48,7 +46,6 @@ fastify.register(userRoutes, { prefix: '/users' });
 fastify.register(uploadRoutes, { prefix: '/uploads' });
 fastify.register(newsRoutes, { prefix: '/news' });
 fastify.register(chatRoutes, { prefix: '/chat' });
-// Stripe webhook endpoint removed — we handle sessions via session-status/notify flows.
 
 fastify.register(cors, {
   origin: 'http://localhost:3000',
@@ -58,8 +55,8 @@ fastify.register(cors, {
 });
 
 // Đăng ký Socket.IO trên cùng Fastify instance
-// Không chặn, registerSocket sẽ gắn Socket.IO vào fastify.server
 registerSocket(fastify);
+
 // Chạy server
 const PORT = process.env.PORT ? parseInt(process.env.PORT) : 5000;
 fastify.listen({ port: PORT, host: '0.0.0.0' })

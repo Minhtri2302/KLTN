@@ -61,7 +61,7 @@ export const createUser = async (
   try {
     const body = req.body;
     const created = await createUserService(body);
-    return reply.status(201).send(created);
+    return reply.status(200).send(created);
   } catch (err) {
     console.error("createUser", err);
     const message = getErrorMessage(err);
@@ -163,7 +163,7 @@ export const addAddress = async (
     const { id } = req.params;
     const addressData = req.body;
     const user = await addAddressService(id, addressData);
-    return reply.status(201).send(user);
+    return reply.status(200).send(user);
   } catch (err) {
     console.error("addAddress", err);
     const message = getErrorMessage(err);

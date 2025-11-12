@@ -36,7 +36,7 @@ export const createCategory = async (req: FastifyRequest, reply: FastifyReply) =
     }
 
     const category = await categoryService.createCategory(name!, imageUrl);
-    reply.status(201).send(category);
+    reply.status(200).send(category);
   } catch (error: any) {
     if (error.status) {
       return reply.status(error.status).send({ message: error.message });

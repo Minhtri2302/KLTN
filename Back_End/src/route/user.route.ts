@@ -11,16 +11,17 @@ import {
   setDefaultAddress
 } from '../controller/user.controller.ts';
 import { verifyToken, requireAdmin } from '../middleware/auth.ts';
+import { UserByIdParams, UpdateUserBody, AddAddressBody, UpdateAddressBody, AddressIdParams } from '../interface/user.interface.ts';
 
 export default async function userRoutes(fastify: FastifyInstance) {
 
-  fastify.get('/', { preHandler: [verifyToken , requireAdmin ] }as any, listUsers);
+  fastify.get('/', { preHandler: [verifyToken, requireAdmin] }, listUsers);
   fastify.post('/', createUser);
-  fastify.get('/:id', { preHandler: [verifyToken ]}as any, getUserById);
-  fastify.put('/:id', { preHandler: [verifyToken ] }as any, updateUser);
-  fastify.delete('/:id', { preHandler: [verifyToken , requireAdmin ] }as any, deleteUser);
-  fastify.post('/:id/addresses', { preHandler: [verifyToken ] }as any, addAddress);
-  fastify.put('/:id/addresses/:addressId', { preHandler: [verifyToken ] }as any, updateAddress);
-  fastify.delete('/:id/addresses/:addressId', { preHandler: [verifyToken ] }as any, deleteAddress);
-  fastify.patch('/:id/addresses/:addressId/default', { preHandler: [verifyToken ] }as any, setDefaultAddress);
+  fastify.get<{ Params: UserByIdParams }>('/:id', { preHandler: [verifyToken] }, getUserById);
+  fastify.put<{ Params: UserByIdParams; Body: UpdateUserBody }>('/:id', { preHandler: [verifyToken] }, updateUser);
+  fastify.delete<{ Params: UserByIdParams }>('/:id', { preHandler: [verifyToken, requireAdmin] }, deleteUser);
+  fastify.post<{ Params: UserByIdParams; Body: AddAddressBody }>('/:id/addresses', { preHandler: [verifyToken] }, addAddress);
+  fastify.put<{ Params: AddressIdParams; Body: UpdateAddressBody }>('/:id/addresses/:addressId', { preHandler: [verifyToken] }, updateAddress);
+  fastify.delete<{ Params: AddressIdParams }>('/:id/addresses/:addressId', { preHandler: [verifyToken] }, deleteAddress);
+  fastify.patch<{ Params: AddressIdParams }>('/:id/addresses/:addressId/default', { preHandler: [verifyToken] }, setDefaultAddress);
 }

@@ -25,7 +25,7 @@ export const uploadImage = async (req: FastifyRequest, reply: FastifyReply) => {
       return reply.code(500).send({ message: 'Upload failed, no result' });
     }
 
-    return reply.code(201).send({ url: result.secure_url, public_id: result.public_id });
+    return reply.code(200).send({ url: result.secure_url, public_id: result.public_id });
   } catch (err) {
     console.error('uploadImage error:', (err as any) && ((err as any).stack || err));
     return reply.code(500).send({ message: 'Upload failed', error: (err as any)?.message || err });

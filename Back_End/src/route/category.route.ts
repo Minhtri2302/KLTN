@@ -9,7 +9,7 @@ import { verifyToken, requireAdmin } from '../middleware/auth.ts';
 
 export default async function categoryRoutes(fastify: FastifyInstance) {
   fastify.get('/', getAllCategory);
-  fastify.post('/', { preHandler: [verifyToken , requireAdmin ] }, createCategory);
-  fastify.put('/:id', { preHandler: [verifyToken , requireAdmin ] }as any, updateCategory);
-  fastify.delete('/:id', { preHandler: [verifyToken , requireAdmin ] }as any, deleteCategory);
+  fastify.post('/', { preHandler: [verifyToken, requireAdmin] }, createCategory);
+  fastify.put<{ Params: { id: string } }>('/:id', { preHandler: [verifyToken, requireAdmin] }, updateCategory);
+  fastify.delete<{ Params: { id: string } }>('/:id', { preHandler: [verifyToken, requireAdmin] }, deleteCategory);
 }

@@ -128,7 +128,7 @@ export const createProduct = async (
       stock: stock !== undefined ? Number(stock) : undefined,
     });
 
-    return reply.status(201).send(newProduct);
+    return reply.status(200).send(newProduct);
   } catch (err) {
     console.error('createProduct error. body=', req.body, (err as any) && ((err as any).stack || err));
     if ((err as any)?.name === 'ValidationError') {

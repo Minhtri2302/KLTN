@@ -4,9 +4,9 @@ import { createCheckoutSession, /*stripeWebhookHandler*/ getSessionOrderStatus }
 
 export default async function paymentRoutes(fastify: FastifyInstance) {
   // create checkout session (requires auth so we can attach accountId)
-  fastify.post('/create-checkout-session', { preHandler: [verifyToken] } as any, createCheckoutSession);
+  fastify.post('/create-checkout-session', { preHandler: [verifyToken] }, createCheckoutSession);
 
-  fastify.get(
+  fastify.get<{ Querystring: { session_id: string } }>(
     '/session-status',
     {
       schema: {
@@ -18,7 +18,7 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
           required: ['session_id'],
         },
       },
-    } as any,
+    },
     getSessionOrderStatus
   );
 }

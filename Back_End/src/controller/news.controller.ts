@@ -83,7 +83,7 @@ class NewsController {
   async createNews(req: FastifyRequest<{ Body: CreateNewsBody }>, reply: FastifyReply) {
     try {
       const news = await newsService.createNews(req.body);
-      return reply.status(201).send({ 
+      return reply.status(200).send({ 
         success: true,
         message: 'News created successfully',
         data: news 

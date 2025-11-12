@@ -81,7 +81,7 @@ export const createReview = async (
     const accountId = user && user.id;
     
     const doc = await createReviewService(productId, rating, comment, accountId);
-    return reply.status(201).send(doc);
+    return reply.status(200).send(doc);
   } catch (err) {
     console.error('createReview', err);
     const message = (err as any)?.message || 'Server error';

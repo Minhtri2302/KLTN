@@ -4,10 +4,10 @@ import { verifyToken, requireAdmin, requireOwnerOrAdmin, requireUser } from '../
 
 export default async function chatRoutes(fastify: FastifyInstance) {
   
-  fastify.get('/online', { preHandler: [verifyToken, requireAdmin] } as any, getOnlineUsers);
-  fastify.get('/participants', { preHandler: [verifyToken, requireAdmin] } as any, getChatParticipants);
-  fastify.get('/admin-info', { preHandler: [verifyToken] } as any, getAdminInfo);
-  fastify.get('/history/:id', { preHandler: [verifyToken, requireOwnerOrAdmin] } as any, getHistoryByUserId);
-  fastify.post('/send/admin', { preHandler: [verifyToken, requireAdmin] } as any, sendMessageAdmin);
-  fastify.post('/send/user', { preHandler: [verifyToken, requireUser] } as any, sendMessageUser);
+  fastify.get('/online', { preHandler: [verifyToken, requireAdmin] }, getOnlineUsers);
+  fastify.get('/participants', { preHandler: [verifyToken, requireAdmin] }, getChatParticipants);
+  fastify.get('/admin-info', { preHandler: [verifyToken] }, getAdminInfo);
+  fastify.get<{ Params: { id: string } }>('/history/:id', { preHandler: [verifyToken, requireOwnerOrAdmin] }, getHistoryByUserId);
+  fastify.post('/send/admin', { preHandler: [verifyToken, requireAdmin] }, sendMessageAdmin);
+  fastify.post('/send/user', { preHandler: [verifyToken, requireUser] }, sendMessageUser);
 }

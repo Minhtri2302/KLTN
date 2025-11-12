@@ -12,7 +12,7 @@ class AccountController {
   async register(req: FastifyRequest<{ Body: RegisterBody }>, reply: FastifyReply) {
     try {
       const account = await accountService.register(req.body);
-      return reply.status(201).send({
+      return reply.status(200).send({
         success: true,
         message: 'Đăng ký tài khoản thành công',
         data: account
