@@ -15,6 +15,33 @@ export default function Register() {
 
   const handleSubmit = async e => {
     e.preventDefault();
+    
+    // Validation username - tối thiểu 6 ký tự
+    if (form.username.length < 6) {
+      setToast({ message: "Username phải có ít nhất 6 ký tự", type: "error" });
+      return;
+    }
+    
+    // Validation password mạnh - ít nhất 8 ký tự, có chữ hoa, chữ thường, số và ký tự đặc biệt
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (!passwordRegex.test(form.password)) {
+      setToast({ message: "Password phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt (@$!%*?&)", type: "error" });
+      return;
+    }
+    
+    // Validation email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(form.email)) {
+      setToast({ message: "Email không hợp lệ", type: "error" });
+      return;
+    }
+    
+    // Validation số điện thoại
+    if (!/^[0-9]{10}$/.test(form.phone)) {
+      setToast({ message: "Số điện thoại phải là 10 số", type: "error" });
+      return;
+    }
+    
     setLoading(true);
     try {
       const data = await register(form);
@@ -41,11 +68,11 @@ export default function Register() {
           <div className="auth-card-alt">
             <h2 style={{ textAlign: 'center' }}>Đăng ký</h2>
             <form onSubmit={handleSubmit}>
-              <input className="auth-input" name="username" placeholder="Username" value={form.username} onChange={handleChange} required />
-              <input className="auth-input" name="password" type="password" placeholder="Password" value={form.password} onChange={handleChange} required />
+              <input className="auth-input" name="username" placeholder="Username (tối thiểu 6 ký tự)" value={form.username} onChange={handleChange} minLength="6" title="Username phải có ít nhất 6 ký tự" required />
+              <input className="auth-input" name="password" type="password" placeholder="Password (mạnh: 8+ ký tự, A-z, 0-9, @$!%*?&)" value={form.password} onChange={handleChange} minLength="8" title="Password phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt" required />
               <input className="auth-input" name="fullname" placeholder="Họ và tên" value={form.fullname} onChange={handleChange} required />
-              <input className="auth-input" name="phone" placeholder="Số điện thoại" value={form.phone} onChange={handleChange} required />
-              <input className="auth-input" name="email" type="email" placeholder="Email" value={form.email} onChange={handleChange} required />
+              <input className="auth-input" name="phone" type="tel" placeholder="Số điện thoại (10 số)" value={form.phone} onChange={handleChange} pattern="[0-9]{10}" title="Số điện thoại phải là 10 số" maxLength="10" required />
+              <input className="auth-input" name="email" type="email" placeholder="Email" value={form.email} onChange={handleChange} pattern="[^\s@]+@[^\s@]+\.[^\s@]+" title="Email không hợp lệ" required />
               <button className="auth-button" type="submit" disabled={loading}>
                 {loading ? 'Đang đăng ký...' : 'Đăng ký'}
               </button>

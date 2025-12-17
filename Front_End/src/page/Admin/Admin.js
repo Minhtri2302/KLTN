@@ -250,11 +250,6 @@ export default function Admin({ onLogout, children }) {
           <aside className="admin-sidebar" style={{ width: 260 }}>
             <div className="sidebar-menu">
               <div className="menu-item">
-                <NavLink to="/admin" end className={({ isActive }) => `menu-btn ${isActive ? 'active' : ''}`}>
-                   Tổng quan
-                </NavLink>
-              </div>
-              <div className="menu-item">
                 <NavLink to="/admin/categories" className={({ isActive }) => `menu-btn ${isActive ? 'active' : ''}`}>
                    Danh mục
                 </NavLink>
@@ -298,6 +293,11 @@ export default function Admin({ onLogout, children }) {
               <div className="menu-item">
                 <NavLink to="/admin/reviews" className={({ isActive }) => `menu-btn ${isActive ? 'active' : ''}`}>
                    Đánh giá
+                </NavLink>
+              </div>
+              <div className="menu-item">
+                <NavLink to="/admin/statistics" className={({ isActive }) => `menu-btn ${isActive ? 'active' : ''}`}>
+                  Thống kê
                 </NavLink>
               </div>
 

@@ -30,14 +30,6 @@ export async function updateOrder(token, id, body) {
   return data;
 }
 
-export async function deleteOrder(token, id) {
-  if (!token) throw Object.assign(new Error('No token provided'), { code: 401 });
-  const res = await fetch(`${API}/orders/${id}`, { method: 'DELETE', headers: authHeaders(token) });
-  let data = null; try { data = await res.json(); } catch (e) {}
-  if (!res.ok) { const err = new Error((data && data.message) ? data.message : `Request failed ${res.status}`); err.code = res.status; throw err; }
-  return data;
-}
-
 export async function getOrdersByUser(token, accountId) {
   if (!token) throw Object.assign(new Error('No token provided'), { code: 401 });
   try {
@@ -57,10 +49,10 @@ export async function getOrdersByUser(token, accountId) {
 export async function cancelOrder(token, orderId) {
   if (!token) throw Object.assign(new Error('No token provided'), { code: 401 });
   try {
-    const res = await fetch(`${API}/orders/${encodeURIComponent(orderId)}`, {
-      method: 'PUT',
+    const res = await fetch(`${API}/orders/${encodeURIComponent(orderId)}/cancel`, {
+      method: 'PATCH',
       headers: { 'Content-Type': 'application/json', ...authHeaders(token) },
-      body: JSON.stringify({ status: 'Đã hủy' })
+      body: JSON.stringify({})
     });
     let data = null; try { data = await res.json(); } catch (e) { }
     if (!res.ok) {

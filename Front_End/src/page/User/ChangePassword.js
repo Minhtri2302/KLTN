@@ -27,8 +27,10 @@ export default function ChangePassword() {
       return;
     }
 
-    if (pw.newPassword.length < 6) {
-      setToast({ message: 'Mật khẩu mới phải có ít nhất 6 ký tự', type: 'warning' });
+    // Validation mật khẩu mạnh - ít nhất 8 ký tự, có chữ hoa, chữ thường, số và ký tự đặc biệt
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (!passwordRegex.test(pw.newPassword)) {
+      setToast({ message: 'Mật khẩu mới phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt (@$!%*?&)', type: 'warning' });
       return;
     }
 
@@ -77,11 +79,13 @@ export default function ChangePassword() {
                   <input
                     name="newPassword"
                     type="password"
-                    placeholder="Nhập mật khẩu mới"
+                    placeholder="Mật khẩu mạnh (8+ ký tự, A-z, 0-9, @$!%*?&)"
                     value={pw.newPassword || ''}
                     onChange={handleChange}
                     className="form-control"
-                    require
+                    minLength="8"
+                    title="Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt"
+                    required
                   />
                 </div>
 
@@ -94,6 +98,7 @@ export default function ChangePassword() {
                     value={pw.confirmPassword || ''}
                     onChange={handleChange}
                     className="form-control"
+                    minLength="8"
                     required
                   />
                 </div>

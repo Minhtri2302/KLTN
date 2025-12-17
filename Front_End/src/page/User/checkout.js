@@ -359,6 +359,12 @@ export default function CheckoutPage() {
       setToast({ message: "Vui lòng điền đầy đủ thông tin giao hàng", type: "warning" });
       return;
     }
+    
+    // Validation số điện thoại
+    if (!/^[0-9]{10}$/.test(orderInfo.phone)) {
+      setToast({ message: "Số điện thoại phải là 10 số", type: "warning" });
+      return;
+    }
 
     const token = sessionStorage.getItem("token");
     if (!token) {
@@ -596,10 +602,12 @@ export default function CheckoutPage() {
               ) : (
                 <input
                   name={f}
+                  type={f === "phone" ? "tel" : f === "email" ? "email" : "text"}
                   value={form[f]}
                   onChange={handleChange}
                   className="form-control"
                   readOnly={!!userProfile}
+                  {...(f === "phone" ? { pattern: "[0-9]{10}", maxLength: "10", title: "Số điện thoại phải là 10 số", placeholder: "Nhập 10 số" } : {})}
                 />
               )}
             </div>

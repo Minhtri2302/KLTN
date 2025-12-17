@@ -21,7 +21,6 @@ import ChangePassword from './page/User/ChangePassword';
 import AddressManagement from './page/User/AddressManagement';
 import OrderHistory from './page/User/OrderHistory';
 import Admin from './page/Admin/Admin';
-import AdminOverview from './page/Admin/Overview';
 import ProductManagement from './page/Admin/ProductManagement';
 import CategoryManagement from './page/Admin/CategoryManagement';
 import BannerManagement from './page/Admin/BannerManagement';
@@ -31,6 +30,7 @@ import ContactManagement from './page/Admin/ContactManagement';
 import ProfileManagement from './page/Admin/ProfileManagement';
 import ReviewManagement from './page/Admin/ReviewManagement';
 import NewsManagement from './page/Admin/NewsManagement';
+import Statistics from './page/Admin/Statistics';
 import './App.css';
 // import './CSS/product.css';
 // import './CSS/admin.css'
@@ -88,7 +88,7 @@ function App() {
           <Route path="/admin/chat" element={<AdminChat fullScreen token={token} />} />
           <Route path="/policy" element={<ReturnPolicy />} />
           <Route path="/admin/*" element={<Admin onLogout={handleLogout} />}>
-            <Route index element={<AdminOverview token={token} />} />
+            <Route index element={<CategoryManagement token={token} />} />
             <Route path="products" element={<ProductManagement token={token} />} />
             <Route path="categories" element={<CategoryManagement token={token} />} />
             <Route path="banners" element={<BannerManagement token={token} />} />
@@ -98,6 +98,7 @@ function App() {
             <Route path="profiles" element={<ProfileManagement token={token} />} />
             <Route path="contacts" element={<ContactManagement token={token} />} />
             <Route path="reviews" element={<ReviewManagement token={token} />} />
+            <Route path="statistics" element={<Statistics />} />
            
           </Route>
         </Routes>

@@ -197,51 +197,60 @@ export default function ProductDetail() {
               className="form-control w-25"
             />
             {product.stock > 0 ? (
-                <div>
-                  <strong>Tình trạng:</strong> <span className="text-success">Còn hàng</span>
+                <div className="ms-3" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <strong>Tình trạng:</strong> 
+                  <span style={{ fontSize: '0.9rem', color: '#16a34a' }}>
+                    Còn {product.stock} sản phẩm
+                  </span>
                 </div>
               ) : (
-                <div>
+                <div className="ms-3">
                   <strong>Tình trạng:</strong> <span className="text-danger">Hết hàng</span>
                 </div>
               )}
           </div>
 
           <div className="d-flex gap-2 w-100 mt-2" style={{ justifyContent: 'flex-start' }}>
-            <button
-              className="add-to-cart-btn"
-              onClick={handleAddToCart}
-              disabled={product.stock !== undefined && product.stock <= 0}
-            >
-              Thêm vào giỏ
-            </button>
-            <button
-              className="buy-now-btn"
-              disabled={product.stock !== undefined && product.stock <= 0}
-              onClick={() => {
-                // Kiểm tra đăng nhập
-                if (!currentUser) {
-                  setToast({ message: 'Vui lòng đăng nhập để mua hàng', type: 'warning' });
-                  setTimeout(() => navigate('/login'), 1500);
-                  return;
-                }
+            {product.stock !== undefined && product.stock <= 0 ? (
+              <div className="alert alert-danger w-100 mb-0">
+                <strong>Sản phẩm hiện tại đã hết hàng</strong>
+              </div>
+            ) : (
+              <>
+                <button
+                  className="add-to-cart-btn"
+                  onClick={handleAddToCart}
+                >
+                  Thêm vào giỏ
+                </button>
+                <button
+                  className="buy-now-btn"
+                  onClick={() => {
+                    // Kiểm tra đăng nhập
+                    if (!currentUser) {
+                      setToast({ message: 'Vui lòng đăng nhập để mua hàng', type: 'warning' });
+                      setTimeout(() => navigate('/login'), 1500);
+                      return;
+                    }
 
-                if (product.stock !== undefined && product.stock <= 0) {
-                  setToast({ message: 'Sản phẩm đã hết hàng', type: 'warning' });
-                  return;
-                }
-                try {
-                  addItem(product, quantity);
-                } catch (err) {
-                  console.error('Lỗi khi thêm vào giỏ (Mua ngay):', err);
-                  setToast({ message: 'Không thể thêm sản phẩm vào giỏ, vui lòng thử lại', type: 'error' });
-                  return;
-                }
-                navigate(`/cart`);
-              }}
-            >
-              Mua ngay
-            </button>
+                    if (product.stock !== undefined && product.stock <= 0) {
+                      setToast({ message: 'Sản phẩm đã hết hàng', type: 'warning' });
+                      return;
+                    }
+                    try {
+                      addItem(product, quantity);
+                    } catch (err) {
+                      console.error('Lỗi khi thêm vào giỏ (Mua ngay):', err);
+                      setToast({ message: 'Không thể thêm sản phẩm vào giỏ, vui lòng thử lại', type: 'error' });
+                      return;
+                    }
+                    navigate(`/cart`);
+                  }}
+                >
+                  Mua ngay
+                </button>
+              </>
+            )}
           </div>
           <hr />
           <div className="product-reviews mt-4">
@@ -305,11 +314,7 @@ export default function ProductDetail() {
                   <div className="mb-2 text-muted small">Bạn phải nhập nhận xét (ít nhất 3 ký tự) và chọn số sao trước khi gửi.</div>
                   <button className="btn btn-primary" disabled={submitting || !(rating >= 1 && rating <= 5 && String(comment || '').trim().length >= 3)} onClick={handleSubmitReview}>{submitting ? 'Đang gửi...' : 'Gửi đánh giá'}</button>
                 </div>
-              ) : (
-                <div className="alert alert-warning mb-3">
-                  {canReview.reason || 'Bạn chưa thể đánh giá sản phẩm này'}
-                </div>
-              )
+              ) : null
             ) : (
               <div className="mb-3">Bạn cần <a href="/login">đăng nhập</a> để gửi đánh giá.</div>
             )}

@@ -60,7 +60,24 @@ export default function CartPage() {
     const next = { ...cart };
     const item = next.items.find((i) => i._id === id);
     if (!item) return;
-    item.qty = Math.max(1, Number(qty) || 1);
+    
+    const newQty = Number(qty) || 1;
+    
+    // Kiểm tra tồn kho
+    if (item.stock !== undefined && item.stock !== null) {
+      if (newQty > item.stock) {
+        setToast({ 
+          message: `Số lượng không được vượt quá tồn kho (${item.stock} sản phẩm)`, 
+          type: 'warning' 
+        });
+        item.qty = Math.min(item.qty, item.stock);
+      } else {
+        item.qty = Math.max(1, newQty);
+      }
+    } else {
+      item.qty = Math.max(1, newQty);
+    }
+    
     cartService.saveCart(next);
     setCart(next);
   };

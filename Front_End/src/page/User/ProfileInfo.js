@@ -186,6 +186,13 @@ export default function ProfileInfo() {
 
   const handleSave = async () => {
     if (saving) return;
+    
+    // Validation số điện thoại
+    if (editProfile.phone && !/^[0-9]{10}$/.test(editProfile.phone)) {
+      setToast({ show: true, message: 'Số điện thoại phải là 10 số', type: 'error' });
+      return;
+    }
+    
     setSaving(true);
     const token = sessionStorage.getItem('token');
     if (!token) {
@@ -390,6 +397,10 @@ export default function ProfileInfo() {
                       value={editProfile.phone}
                       onChange={(e) => setEditProfile(prev => ({ ...prev, phone: e.target.value }))}
                       disabled={!editing}
+                      pattern="[0-9]{10}"
+                      maxLength="10"
+                      title="Số điện thoại phải là 10 số"
+                      placeholder="Nhập 10 số"
                     />
                   </div>
                   <div className="row mb-3">
@@ -401,10 +412,8 @@ export default function ProfileInfo() {
                         onChange={(e) => setEditProfile(prev => ({ ...prev, gender: e.target.value }))}
                         disabled={!editing}
                       >
-                        <option value="">Chọn giới tính</option>
                         <option value="Nam">Nam</option>
                         <option value="Nữ">Nữ</option>
-                        <option value="Khác">Khác</option>
                       </select>
                     </div>
                     <div className="col-md-6">
@@ -425,7 +434,7 @@ export default function ProfileInfo() {
                         type="button"
                         className="btn btn-primary px-5"
                         onClick={() => setEditing(true)}
-                        style={{ background: '#e91e63', border: 'none', borderRadius: '25px', padding: '10px 40px' }}
+                        style={{ background: '#1e4ae9ff', border: 'none', borderRadius: '25px', padding: '10px 40px' }}
                       >
                         Chỉnh sửa
                       </button>
@@ -436,7 +445,7 @@ export default function ProfileInfo() {
                           className="btn btn-primary px-4"
                           onClick={handleSave}
                           disabled={saving}
-                          style={{ background: '#e91e63', border: 'none', borderRadius: '25px', padding: '10px 30px' }}
+                          style={{ background: '#2626ceff', border: 'none', borderRadius: '25px', padding: '10px 30px' }}
                         >
                           Lưu thông tin
                         </button>

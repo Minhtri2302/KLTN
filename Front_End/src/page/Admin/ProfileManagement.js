@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { listProfiles, createProfile, updateProfile, deleteProfile, uploadImage as uploadProfileImage } from '../../service/profile.service';
+import { listProfiles, createProfile, updateProfile, uploadImage as uploadProfileImage } from '../../service/profile.service';
 import { listAccounts } from '../../service/account.service';
-import ConfirmModal from '../../components/ConfirmModal';
 import Toast from '../../components/Toast';
 import Loading from '../../components/Loading';
 
@@ -13,8 +12,6 @@ export default function ProfileManagement({ token }) {
   const [showUserProfileModal, setShowUserProfileModal] = useState(false);
   const [currentUserProfile, setCurrentUserProfile] = useState(null);
   const [accountsList, setAccountsList] = useState([]);
-  const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [itemToDelete, setItemToDelete] = useState(null);
   const [toast, setToast] = useState({ message: '', type: '' });
 
   useEffect(() => { loadData(); }, []);
@@ -82,31 +79,6 @@ export default function ProfileManagement({ token }) {
     finally { setLoading(false); }
   };
 
-  const handleDeleteUserProfile = async (id) => {
-    setItemToDelete(id);
-    setShowConfirmModal(true);
-  };
-
-  const confirmDelete = async () => {
-    setShowConfirmModal(false);
-    setLoading(true);
-    try { 
-      await deleteProfile(effectiveToken, itemToDelete); 
-      await loadData(); 
-      setToast({ message: 'Xóa hồ sơ thành công', type: 'success' });
-    }
-    catch (err) { console.error('Error deleting profile', err); setToast({ message: 'Có lỗi khi xóa hồ sơ', type: 'error' }); }
-    finally { 
-      setLoading(false);
-      setItemToDelete(null);
-    }
-  };
-
-  const cancelDelete = () => {
-    setShowConfirmModal(false);
-    setItemToDelete(null);
-  };
-
   const q = searchQuery.toLowerCase();
   const filteredProfiles = userProfiles.filter(p => !searchQuery || (p.name || '').toLowerCase().includes(q) || (p.email || '').toLowerCase().includes(q) || (p.phone || '').toLowerCase().includes(q));
 
@@ -158,10 +130,7 @@ export default function ProfileManagement({ token }) {
                   </td>
                   <td style={{ verticalAlign: 'middle', textAlign: 'center', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}><code title={p.accountId}>{p.accountId}</code></td>
                   <td style={{ verticalAlign: 'middle', textAlign: 'center' }} >
-                    <div style={{ display: 'inline-flex', gap: 8, alignItems: 'center' }}>
-                      <button className="btn btn-sm btn-info" onClick={() => openUserProfileForm(p, true)}>Xem</button>
-                      <button className="btn btn-sm btn-danger" onClick={() => handleDeleteUserProfile(p._id)}>Xóa</button>
-                    </div>
+                    <button className="btn btn-sm btn-info" onClick={() => openUserProfileForm(p, true)}>Xem</button>
                   </td>
                 </tr>
               ))}
@@ -256,14 +225,6 @@ export default function ProfileManagement({ token }) {
           </div>
         </div>
       )}
-
-      <ConfirmModal
-        isOpen={showConfirmModal}
-        onClose={cancelDelete}
-        onConfirm={confirmDelete}
-        title="Xác nhận xóa"
-        message="Bạn có chắc chắn muốn xóa hồ sơ này không? Hành động này không thể hoàn tác."
-      />
 
       {toast.message && (
         <Toast

@@ -142,7 +142,7 @@ export default function OrderHistory() {
             <div className="card mb-3" key={o._id || idx}>
               <div className="card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
-                  <strong style={{ fontSize: 16 }}>Đơn hàng #{o._id}</strong>
+                  <strong style={{ fontSize: 16 }}>Đơn hàng {o._id}</strong>
                   <div className="text-muted" style={{ fontSize: 13 }}>
                     Ngày đặt: {o.createdAt ? new Date(o.createdAt).toLocaleString('vi-VN') : ''}
                   </div>

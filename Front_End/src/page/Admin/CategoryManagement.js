@@ -120,7 +120,7 @@ export default function CategoryManagement({ token }) {
           <div>
             <input className="form-control form-control-sm" placeholder="Tìm danh mục..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
             <button className="btn-add-purple" onClick={() => openCategoryForm(null)}>
-              + Thêm sản phẩm
+              + Thêm danh mục
             </button>
           </div>
         </div>

@@ -66,8 +66,8 @@ export default function AddressModal({
     }
     if (!formData.phone.trim()) {
       newErrors.phone = "Vui lòng nhập số điện thoại";
-    } else if (!/^[0-9]{10,11}$/.test(formData.phone)) {
-      newErrors.phone = "Số điện thoại không hợp lệ";
+    } else if (!/^[0-9]{10}$/.test(formData.phone)) {
+      newErrors.phone = "Số điện thoại phải là 10 số";
     }
     if (!formData.email.trim()) {
       newErrors.email = "Vui lòng nhập email";
@@ -128,8 +128,11 @@ export default function AddressModal({
               name="phone"
               value={formData.phone}
               onChange={handleChange}
-              placeholder="Nhập số điện thoại"
+              placeholder="Nhập số điện thoại (10 số)"
               className={errors.phone ? "error" : ""}
+              pattern="[0-9]{10}"
+              maxLength="10"
+              title="Số điện thoại phải là 10 số"
             />
             {errors.phone && <span className="error-text">{errors.phone}</span>}
           </div>
