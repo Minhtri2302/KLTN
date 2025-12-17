@@ -176,7 +176,7 @@ class OrderService {
 
   async getOrders(): Promise<any[]> {
     try {
-      const orders = await OrderModel.find().lean();
+      const orders = await OrderModel.find().sort({ createdAt: -1 }).lean();
       return orders;
     } catch (error) {
       throw error;
@@ -189,21 +189,21 @@ class OrderService {
         throw { status: 400, message: 'Invalid accountId' };
       }
       
-      const orders = await OrderModel.find({ accountId }).lean();
+      const orders = await OrderModel.find({ accountId }).sort({ createdAt: -1 }).lean();
       return orders;
     } catch (error) {
       throw error;
     }
   }
 
-  async getOrdersWithAccount(): Promise<any[]> {
-    try {
-      const orders = await OrderModel.find().lean();
-      return orders;
-    } catch (error) {
-      throw error;
-    }
-  }
+  // async getOrdersWithAccount(): Promise<any[]> {
+  //   try {
+  //     const orders = await OrderModel.find().lean();
+  //     return orders;
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // }
 
   async getOrderById(id: string): Promise<any> {
     try {
@@ -228,60 +228,12 @@ class OrderService {
         throw { status: 400, message: 'Invalid id' };
       }
 
-      const update: any = { ...(body || {}) };
-      if (update._id) delete update._id;
-
-      // Nếu có items, điền thông tin name/image từ ProductModel nếu thiếu
-      if (update.items && Array.isArray(update.items) && update.items.length > 0) {
-        // Validate và normalize productId trong items
-        update.items = update.items.map((item: any) => {
-          // Nếu productId không hợp lệ hoặc không tồn tại, vẫn giữ lại item
-          // nhưng set productId = null để tránh lỗi validation
-          if (item.productId) {
-            const isValid = mongoose.Types.ObjectId.isValid(item.productId);
-            if (!isValid) {
-              console.warn(`Invalid productId: ${item.productId}, setting to null`);
-              return { ...item, productId: null };
-            }
-          }
-          return item;
-        });
-
-        // Lấy danh sách productId hợp lệ cần lookup
-        const productIds = update.items
-          .filter((item: any) => item.productId && mongoose.Types.ObjectId.isValid(item.productId))
-          .filter((item: any) => !item.image || !item.name)
-          .map((item: any) => item.productId);
-
-        if (productIds.length > 0) {
-          try {
-            const products = await ProductModel.find({ _id: { $in: productIds } })
-              .select('_id name image price')
-              .lean();
-
-            const productMap = new Map(
-              products.map((p: any) => [String(p._id), p])
-            );
-
-            update.items = update.items.map((item: any) => {
-              if (!item.productId) return item;
-              
-              const product = productMap.get(String(item.productId));
-              if (product) {
-                return {
-                  ...item,
-                  name: item.name || product.name || '',
-                  image: item.image || product.image || '',
-                  price: item.price != null ? item.price : product.price || 0
-                };
-              }
-              return item;
-            });
-          } catch (err) {
-            console.warn('Failed to lookup products for order update:', err);
-          }
-        }
+      // Chỉ cho phép cập nhật status
+      if (!body.status) {
+        throw { status: 400, message: 'Status is required' };
       }
+
+      const update = { status: body.status };
 
       const updated = await OrderModel.findByIdAndUpdate(id, update, { 
         new: true,
@@ -298,18 +250,65 @@ class OrderService {
     }
   }
 
-  async deleteOrder(id: string): Promise<{ message: string; id: any }> {
+
+
+  async cancelOrder(id: string): Promise<{ message: string; data: any }> {
     try {
       if (!mongoose.Types.ObjectId.isValid(id)) {
-        throw { status: 400, message: 'Invalid id' };
+        throw { status: 400, message: 'Invalid order id' };
       }
 
-      const deleted = await OrderModel.findByIdAndDelete(id);
-      if (!deleted) {
-        throw { status: 404, message: 'Order not found' };
-      }
+      const session = await mongoose.startSession();
 
-      return { message: 'Order deleted successfully', id: deleted._id };
+      try {
+        let cancelledOrder: any = null;
+
+        await session.withTransaction(async () => {
+          // Get the order first
+          const order = await OrderModel.findById(id).session(session);
+          
+          if (!order) {
+            throw { status: 404, message: 'Order not found' };
+          }
+
+          // Check if order can be cancelled (only "Chờ xử lý" and "Đang xử lý" statuses)
+          if (order.status !== 'Chờ xử lý' && order.status !== 'Đang xử lý') {
+            throw { 
+              status: 400, 
+              message: `Cannot cancel order with status: ${order.status}` 
+            };
+          }
+
+          // Return stock to inventory for each item
+          const items = order.items || [];
+          for (const item of items) {
+            if (item.productId && mongoose.Types.ObjectId.isValid(String(item.productId))) {
+              const quantity = item.quantity || 0;
+              
+              // Increment stock by the ordered quantity
+              await ProductModel.findByIdAndUpdate(
+                item.productId,
+                { $inc: { stock: quantity } },
+                { session, new: true }
+              );
+            }
+          }
+
+          // Update order status to "Đã hủy"
+          cancelledOrder = await OrderModel.findByIdAndUpdate(
+            id,
+            { status: 'Đã hủy' },
+            { session, new: true, runValidators: true }
+          );
+        });
+
+        return { 
+          message: 'Order cancelled successfully and stock returned to inventory', 
+          data: cancelledOrder 
+        };
+      } finally {
+        session.endSession();
+      }
     } catch (error) {
       throw error;
     }

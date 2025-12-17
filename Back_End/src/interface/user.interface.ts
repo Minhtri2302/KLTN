@@ -23,10 +23,11 @@ export interface CreateUserBody {
 }
 
 export interface UpdateUserBody extends CreateUserBody {
-  
 }
 
-export interface UserByIdParams { id: string }
+export interface UserByIdParams { 
+  id: string 
+}
 
 export interface AddAddressBody {
   fullName: string;

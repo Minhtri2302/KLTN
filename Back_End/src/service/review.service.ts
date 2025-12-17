@@ -52,7 +52,12 @@ export const deleteReviewService = async (id: string) => {
 };
 
 export const getAllReviewsService = async () => {
-  const list = await ReviewModel.find().sort({ createdAt: -1 });
+  const list = await ReviewModel.find()
+    .populate({
+      path: 'userId',
+      select: 'name'
+    })
+    .sort({ createdAt: -1 });
   return list;
 };
 
@@ -74,47 +79,16 @@ export const createReviewService = async (
     throw new Error('Rating must be between 1 and 5');
   }
 
+  // Kiểm tra số lần mua và số lần đã đánh giá
+  const reviewCheck = await canUserReviewProductService(productId, accountId);
+  if (!reviewCheck.canReview) {
+    throw new Error(reviewCheck.reason || 'Bạn không thể đánh giá sản phẩm này');
+  }
+
   // Truy vấn user theo accountId
   const userProfile = await UserModel.findOne({ accountId });
   if (!userProfile) {
     throw new Error('User profile not found');
-  }
-
-  // Kiểm tra xem user đã đánh giá sản phẩm này chưa
-  const existingReview = await ReviewModel.findOne({
-    productId,
-    userId: userProfile._id
-  });
-
-  if (existingReview) {
-    throw new Error('Bạn đã đánh giá sản phẩm này rồi');
-  }
-
-  // Kiểm tra xem user đã mua sản phẩm này và đơn hàng đã giao chưa
-  // accountId có thể là string hoặc ObjectId, productId cũng vậy
-  const accountObjectId = mongoose.Types.ObjectId.isValid(accountId) 
-    ? new mongoose.Types.ObjectId(accountId) 
-    : accountId;
-  const productObjectId = mongoose.Types.ObjectId.isValid(productId)
-    ? new mongoose.Types.ObjectId(productId)
-    : productId;
-
-  console.log('CreateReview - Checking for delivered order with:', {
-    accountId: accountObjectId,
-    productId: productObjectId,
-    status: 'Đã giao'
-  });
-
-  const deliveredOrder = await OrderModel.findOne({
-    accountId: accountObjectId,
-    'items.productId': productObjectId,
-    status: 'Đã giao'
-  });
-
-  console.log('CreateReview - Delivered order found:', deliveredOrder ? 'YES' : 'NO');
-
-  if (!deliveredOrder) {
-    throw new Error('Bạn chỉ có thể đánh giá sản phẩm đã mua và đơn hàng đã được giao');
   }
 
   // Lưu _id user vào trường userId của review
@@ -134,7 +108,10 @@ export const getReviewsByProductService = async (productId: string) => {
   }
 
   const list = await ReviewModel.find({ productId, status: 'active' })
-    .populate('userId', 'name')
+    .populate({
+      path: 'userId',
+      select: 'name'
+    })
     .sort({ createdAt: -1 });
 
   return list;
@@ -164,7 +141,7 @@ export const getReviewsSummaryService = async (productId: string): Promise<Revie
 export const canUserReviewProductService = async (
   productId: string,
   accountId: string
-): Promise<{ canReview: boolean; reason?: string }> => {
+): Promise<{ canReview: boolean; reason?: string; purchaseCount?: number; reviewCount?: number }> => {
   if (!productId || !accountId) {
     return { canReview: false, reason: 'Missing parameters' };
   }
@@ -173,16 +150,6 @@ export const canUserReviewProductService = async (
   const userProfile = await UserModel.findOne({ accountId });
   if (!userProfile) {
     return { canReview: false, reason: 'User profile not found' };
-  }
-
-  // Kiểm tra xem đã đánh giá chưa
-  const existingReview = await ReviewModel.findOne({
-    productId,
-    userId: userProfile._id
-  });
-
-  if (existingReview) {
-    return { canReview: false, reason: 'Bạn đã đánh giá sản phẩm này rồi' };
   }
 
   // Kiểm tra xem đã mua và đơn hàng đã giao chưa
@@ -196,20 +163,81 @@ export const canUserReviewProductService = async (
   console.log('Checking for delivered order with:', {
     accountId: accountObjectId,
     productId: productObjectId,
+    productIdString: String(productId),
     status: 'Đã giao'
   });
 
-  const deliveredOrder = await OrderModel.findOne({
+  // Tìm tất cả đơn hàng đã giao của user này
+  const deliveredOrders = await OrderModel.find({
     accountId: accountObjectId,
-    'items.productId': productObjectId,
     status: 'Đã giao'
-  });
+  }).lean();
 
-  console.log('Delivered order found:', deliveredOrder ? 'YES' : 'NO');
-
-  if (!deliveredOrder) {
+  console.log(`Found ${deliveredOrders.length} delivered orders for user`);
+  
+  if (deliveredOrders.length === 0) {
     return { canReview: false, reason: 'Bạn chỉ có thể đánh giá sản phẩm đã mua và đơn hàng đã được giao' };
   }
 
-  return { canReview: true };
+  // Đếm số lần mua sản phẩm này (số đơn hàng đã giao có chứa sản phẩm)
+  let purchaseCount = 0;
+  for (const order of deliveredOrders) {
+    console.log(`Checking order ${order._id}, items:`, order.items?.map((it: any) => ({
+      productId: it.productId,
+      productIdString: String(it.productId),
+      name: it.name
+    })));
+    
+    if (order.items && Array.isArray(order.items)) {
+      const hasProduct = order.items.some((item: any) => {
+        // So sánh nhiều cách để đảm bảo tìm được
+        const itemProductId = String(item.productId || '');
+        const targetProductId = String(productId);
+        
+        const match = itemProductId === targetProductId || 
+                     item.productId === productId ||
+                     String(item.productId) === String(productObjectId);
+        
+        if (match) {
+          console.log(`Product matched in order ${order._id}:`, {
+            itemProductId,
+            targetProductId,
+            itemName: item.name
+          });
+        }
+        
+        return match;
+      });
+      
+      if (hasProduct) {
+        purchaseCount++;
+      }
+    }
+  }
+
+  if (purchaseCount === 0) {
+    console.log(`Product ${productId} not found in any delivered orders`);
+    return { canReview: false, reason: 'Bạn chỉ có thể đánh giá sản phẩm đã mua và đơn hàng đã được giao' };
+  }
+
+  // Đếm số lần đã đánh giá sản phẩm này
+  const reviewCount = await ReviewModel.countDocuments({
+    productId: productObjectId,
+    userId: userProfile._id
+  });
+
+  console.log(`User has purchased ${purchaseCount} times and reviewed ${reviewCount} times`);
+
+  // Cho phép đánh giá nếu số lần đánh giá < số lần mua
+  if (reviewCount >= purchaseCount) {
+    return { 
+      canReview: false, 
+      reason: `Bạn đã đánh giá sản phẩm này ${reviewCount} lần (đã mua ${purchaseCount} lần). Mua thêm để đánh giá thêm.`,
+      purchaseCount,
+      reviewCount
+    };
+  }
+
+  console.log(`User CAN review product ${productId} (${reviewCount + 1}/${purchaseCount})`);
+  return { canReview: true, purchaseCount, reviewCount };
 };

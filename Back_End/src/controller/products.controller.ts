@@ -7,6 +7,7 @@ import {
 } from "../interface/products.interface.ts";
 import mongoose from "mongoose";
 import { getProductsService, getProductsByCategoryService, getProductsByIdService } from "../service/products.service.ts";
+import { OrderModel } from "../models/order.model.ts";
 
 export const getProducts = async (
   req: FastifyRequest<{ Querystring: getProduct }>,
@@ -184,6 +185,22 @@ export const deleteProduct = async (
     if (!id || !mongoose.Types.ObjectId.isValid(id)) {
       return reply.status(400).send({ message: "Invalid product ID" });
     }
+
+    // Kiểm tra xem sản phẩm có trong đơn hàng nào không
+    const productObjectId = new mongoose.Types.ObjectId(id);
+    const orderWithProduct = await OrderModel.findOne({
+      $or: [
+        { 'items.productId': productObjectId },
+        { 'items.productId': id }
+      ]
+    }).lean();
+
+    if (orderWithProduct) {
+      return reply.status(400).send({ 
+        message: "Không thể xóa sản phẩm này vì đã có trong đơn hàng. Vui lòng ẩn sản phẩm thay vì xóa." 
+      });
+    }
+
     const deleted = await ProductModel.findByIdAndDelete(id);
     if (!deleted) {
       return reply.status(404).send({ message: "Product not found" });

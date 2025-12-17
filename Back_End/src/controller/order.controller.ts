@@ -122,23 +122,6 @@ class OrderController {
     }
   }
 
-  async getOrdersWithAccount(req: FastifyRequest, reply: FastifyReply) {
-    try {
-      const orders = await orderService.getOrdersWithAccount();
-      return reply.status(200).send({ 
-        success: true,
-        data: orders,
-        total: orders.length 
-      });
-    } catch (error: any) {
-      console.error('getOrdersWithAccount error:', error instanceof Error ? error.stack : error);
-      return reply.status(500).send({ 
-        success: false,
-        message: 'Internal Server Error' 
-      });
-    }
-  }
-
   async getOrderById(req: FastifyRequest<{ Params: OrderByIdParams }>, reply: FastifyReply) {
     try {
       const { id } = req.params;
@@ -180,18 +163,29 @@ class OrderController {
     }
   }
 
-  async deleteOrder(req: FastifyRequest<{ Params: OrderByIdParams }>, reply: FastifyReply) {
+
+
+  async cancelOrder(req: FastifyRequest<{ Params: OrderByIdParams }>, reply: FastifyReply) {
     try {
       const { id } = req.params;
-      const result = await orderService.deleteOrder(id);
+      const user = (req as any).user;
+      
+      if (!user) {
+        return reply.status(401).send({ 
+          success: false,
+          message: 'Unauthorized' 
+        });
+      }
+
+      const result = await orderService.cancelOrder(id);
       
       return reply.status(200).send({ 
         success: true,
         message: result.message,
-        data: { id: result.id } 
+        data: result.data 
       });
     } catch (error: any) {
-      console.error('deleteOrder error:', error instanceof Error ? error.stack : error);
+      console.error('cancelOrder error:', error instanceof Error ? error.stack : error);
       const status = error.status || 500;
       const message = error.message || 'Internal Server Error';
       return reply.status(status).send({ 
@@ -208,7 +202,8 @@ export const orderController = new OrderController();
 export const createOrder = orderController.createOrder.bind(orderController);
 export const getOrders = orderController.getOrders.bind(orderController);
 export const getOrdersByUser = orderController.getOrdersByUser.bind(orderController);
-export const getOrdersWithAccount = orderController.getOrdersWithAccount.bind(orderController);
+// export const getOrdersWithAccount = orderController.getOrdersWithAccount.bind(orderController);
 export const getOrderById = orderController.getOrderById.bind(orderController);
 export const updateOrder = orderController.updateOrder.bind(orderController);
-export const deleteOrder = orderController.deleteOrder.bind(orderController);
+
+export const cancelOrder = orderController.cancelOrder.bind(orderController);

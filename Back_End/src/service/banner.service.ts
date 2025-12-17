@@ -6,7 +6,8 @@ import {
 
 export class BannerService {
   async getAllBanners(page?: number, pageSize?: number) {
-    const query = BannerModel.find().sort({ position: 1, createdAt: -1 });
+    const query = BannerModel.find()
+    .sort({ position: 1, createdAt: -1 });
     
     if (page && pageSize) {
       const skip = (page - 1) * pageSize;

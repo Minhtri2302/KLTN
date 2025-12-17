@@ -31,10 +31,7 @@ export interface CreateOrderBody {
 }
 
 export interface UpdateOrderBody {
-  items?: OrderItem[];
-  total?: number;
-  shipping?: ShippingInfo;
-  status?: string;
+  status: string;
 }
 
 export interface OrderByIdParams {

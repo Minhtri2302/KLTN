@@ -3,10 +3,10 @@ import {
   createOrder,
   getOrders,
   getOrdersByUser,
-  getOrdersWithAccount,
+  // getOrdersWithAccount,
   getOrderById,
   updateOrder,
-  deleteOrder
+  cancelOrder
 } from "../controller/order.controller.ts";
 import { verifyToken } from "../middleware/auth.ts";
 import {
@@ -31,12 +31,7 @@ export default async function orderRoutes(fastify: FastifyInstance) {
     getOrders
   );
 
-  // Get orders with account info
-  fastify.get(
-    '/with-account',
-    { preHandler: [verifyToken] },
-    getOrdersWithAccount
-  );
+
 
   // Get orders by user
   fastify.get<{ Params: OrderByAccountParams }>(
@@ -52,17 +47,17 @@ export default async function orderRoutes(fastify: FastifyInstance) {
     getOrderById
   );
 
-  // Update order
+  // Update order status
   fastify.put<{ Params: OrderByIdParams; Body: UpdateOrderBody }>(
     '/:id',
     { preHandler: [verifyToken] },
     updateOrder
   );
 
-  // Delete order
-  fastify.delete<{ Params: OrderByIdParams }>(
-    '/:id',
+  // Cancel order (returns stock to inventory)
+  fastify.patch<{ Params: OrderByIdParams }>(
+    '/:id/cancel',
     { preHandler: [verifyToken] },
-    deleteOrder
+    cancelOrder
   );
 }

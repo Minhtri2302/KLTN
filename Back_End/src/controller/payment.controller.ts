@@ -117,6 +117,7 @@ export const createCheckoutSession = async (req: FastifyRequest, reply: FastifyR
         const meta: any = {
           accountId: user.id,
           orderId: String(existingOrder._id),
+          items: JSON.stringify(items.map((it: any) => ({ productId: it.productId, quantity: it.quantity || 1 })))
         };
         if (body && body.shipping) {
           try { meta.shipping = JSON.stringify(body.shipping); } catch (e) { /* ignore */ }
@@ -149,7 +150,10 @@ export const createCheckoutSession = async (req: FastifyRequest, reply: FastifyR
     // We'll let the webhook or the frontend session-status path create the order
     // after Stripe confirms payment. Here we only create a Stripe Checkout session.
     try {
-      const meta: any = { accountId: user.id };
+      const meta: any = { 
+        accountId: user.id,
+        items: JSON.stringify(items.map((it: any) => ({ productId: it.productId, name: it.name, quantity: it.quantity || 1 })))
+      };
       if (body && body.shipping) {
         try { meta.shipping = JSON.stringify(body.shipping); } catch (e) { /* ignore */ }
       }
@@ -237,14 +241,56 @@ export const getSessionOrderStatus = async (req: FastifyRequest, reply: FastifyR
                     image,
                   };
                 }));
-                // Merge images into existing.items
+                // Merge items: Ưu tiên lấy productId từ metadata, sau đó lấy thêm image/name từ Stripe
+                let itemsFromMetadata: any[] = [];
+                if ((fullSession as any).metadata?.items) {
+                  try {
+                    itemsFromMetadata = JSON.parse((fullSession as any).metadata.items);
+                  } catch (e) {
+                    req.log?.warn?.({ err: e }, 'Failed to parse items from metadata for merge');
+                  }
+                }
+                
                 if (Array.isArray(existing.items) && existing.items.length) {
                   existing.items = existing.items.map((it: any, idx: number) => {
-                    // Ưu tiên lấy image từ normalizedFromSession theo index, nếu không có thì lấy theo name, cuối cùng là giữ nguyên
+                    // Lấy productId từ metadata (chính xác hơn)
+                    const metaItem = itemsFromMetadata[idx] || itemsFromMetadata.find((m: any) => m.name === it.name);
+                    let productIdToUse = metaItem?.productId || it.productId;
+                    
+                    // Convert sang ObjectId nếu cần
+                    if (productIdToUse && typeof productIdToUse === 'string' && mongoose.Types.ObjectId.isValid(productIdToUse)) {
+                      productIdToUse = new mongoose.Types.ObjectId(productIdToUse);
+                    }
+                    
+                    // Lấy image từ Stripe
                     const matchByIndex = normalizedFromSession[idx];
                     const matchByName = normalizedFromSession.find((n: any) => n.name === it.name);
                     const imageFromSession = (matchByIndex && matchByIndex.image) || (matchByName && matchByName.image) || (it as any).image || '';
-                    return { ...it, image: imageFromSession };
+                    
+                    return { 
+                      ...it, 
+                      productId: productIdToUse, // Đảm bảo productId từ metadata và đã convert sang ObjectId
+                      image: imageFromSession 
+                    };
+                  });
+                } else if (itemsFromMetadata.length) {
+                  // Nếu không có existing.items, dùng items từ metadata và bổ sung image từ Stripe
+                  existing.items = itemsFromMetadata.map((metaItem: any, idx: number) => {
+                    const stripeItem = normalizedFromSession[idx] || normalizedFromSession.find((n: any) => n.name === metaItem.name);
+                    let productIdToUse = metaItem.productId;
+                    
+                    // Convert sang ObjectId nếu cần
+                    if (productIdToUse && typeof productIdToUse === 'string' && mongoose.Types.ObjectId.isValid(productIdToUse)) {
+                      productIdToUse = new mongoose.Types.ObjectId(productIdToUse);
+                    }
+                    
+                    return {
+                      productId: productIdToUse,
+                      name: metaItem.name || stripeItem?.name || 'Product',
+                      quantity: metaItem.quantity || 1,
+                      price: stripeItem?.price || 0,
+                      image: stripeItem?.image || ''
+                    };
                   });
                 } else if (normalizedFromSession.length) {
                   existing.items = normalizedFromSession;
@@ -261,6 +307,50 @@ export const getSessionOrderStatus = async (req: FastifyRequest, reply: FastifyR
                 (existing as any).paidAt = new Date();
                 (existing as any).transaction = { stripeSessionId: session.id };
                 await existing.save();
+                
+                // Giảm số lượng hàng tồn kho - sử dụng items từ metadata
+                try {
+                  // Lấy items từ metadata để có productId chính xác
+                  let itemsToReduce: any[] = [];
+                  if ((fullSession as any).metadata?.items) {
+                    try {
+                      itemsToReduce = JSON.parse((fullSession as any).metadata.items);
+                    } catch (e) {
+                      req.log?.warn?.({ err: e }, 'Failed to parse items from metadata');
+                    }
+                  }
+                  
+                  // Fallback: dùng existing.items nếu không có trong metadata
+                  if (!itemsToReduce.length) {
+                    itemsToReduce = existing.items.map((it: any) => ({ productId: it.productId, quantity: it.quantity }));
+                  }
+                  
+                  for (const item of itemsToReduce) {
+                    if (item.productId && mongoose.Types.ObjectId.isValid(String(item.productId))) {
+                      const result = await ProductModel.findByIdAndUpdate(
+                        item.productId,
+                        { $inc: { stock: -(item.quantity || 1) } },
+                        { new: true }
+                      );
+                      req.log?.info?.({ productId: item.productId, quantity: item.quantity, newStock: result?.stock }, 'Stock reduced for product');
+                    } else if (item.name) {
+                      // Fallback: tìm product theo tên nếu không có productId
+                      const product = await ProductModel.findOne({ name: item.name });
+                      if (product) {
+                        await ProductModel.findByIdAndUpdate(
+                          product._id,
+                          { $inc: { stock: -(item.quantity || 1) } },
+                          { new: true }
+                        );
+                        req.log?.info?.({ productName: item.name, quantity: item.quantity }, 'Stock reduced for product by name');
+                      }
+                    }
+                  }
+                  req.log?.info?.({ orderId: existing._id }, 'Stock reduced for all items');
+                } catch (e) {
+                  req.log?.warn?.({ err: e, orderId: existing._id }, 'Failed to reduce stock');
+                }
+                
                 // Send confirmation email (unchanged)
                 let to = '';
                 try {
@@ -318,11 +408,24 @@ export const getSessionOrderStatus = async (req: FastifyRequest, reply: FastifyR
             const full = await stripe.checkout.sessions.retrieve(session.id, { expand: ['line_items'] } as any);
             const lineItems = (full as any).line_items?.data || [];
             
-            // FIX: Thêm logic lookup ProductModel giống như phần có orderId
-            const normalizedItems = await Promise.all(lineItems.map(async (li: any) => {
+            // Lấy items từ metadata để có productId chính xác
+            let itemsFromMetadata: any[] = [];
+            if ((full as any).metadata?.items) {
+              try {
+                itemsFromMetadata = JSON.parse((full as any).metadata.items);
+              } catch (e) {
+                req.log?.warn?.({ err: e }, 'Failed to parse items from metadata in fallback');
+              }
+            }
+            
+            // Build normalized items: Ưu tiên dùng productId từ metadata, bổ sung image từ Stripe
+            const normalizedItems = await Promise.all(lineItems.map(async (li: any, idx: number) => {
               let image = '';
-              let productId = li.price?.product?.id || li.price?.product_data?.id || undefined;
               const name = li.description || (li.price && li.price.product && li.price.product.name) || (li.price && li.price.product_data && li.price.product_data.name) || li.price?.nickname || 'Item';
+              
+              // Lấy productId từ metadata (chính xác hơn Stripe line_item)
+              const metaItem = itemsFromMetadata[idx] || itemsFromMetadata.find((m: any) => m.name === name);
+              let productId = metaItem?.productId || li.price?.product?.id || li.price?.product_data?.id || undefined;
               
               // Try to get image from Stripe line_item first
               if (li.price && li.price.product_data && Array.isArray(li.price.product_data.images) && li.price.product_data.images.length > 0) {
@@ -345,14 +448,24 @@ export const getSessionOrderStatus = async (req: FastifyRequest, reply: FastifyR
               if (!image && name) {
                 try {
                   const productDoc = await ProductModel.findOne({ name }).select('image').lean();
-                  if (productDoc && productDoc.image) image = productDoc.image;
+                  if (productDoc && productDoc.image) {
+                    image = productDoc.image;
+                    // Nếu không có productId, lấy từ product tìm được
+                    if (!productId) productId = String(productDoc._id);
+                  }
                 } catch (e) {
                   req.log?.warn?.({ err: e, name }, 'getSessionOrderStatus(fallback): failed to lookup product by name');
                 }
               }
               
+              // Convert productId sang ObjectId nếu cần
+              let finalProductId = productId;
+              if (finalProductId && typeof finalProductId === 'string' && mongoose.Types.ObjectId.isValid(finalProductId)) {
+                finalProductId = new mongoose.Types.ObjectId(finalProductId);
+              }
+              
               return {
-                productId,
+                productId: finalProductId,
                 name,
                 price: Number(li.price && (li.price.unit_amount || li.price.unit_amount_decimal) || li.amount_total || 0),
                 quantity: li.quantity || 1,
@@ -396,6 +509,44 @@ export const getSessionOrderStatus = async (req: FastifyRequest, reply: FastifyR
                 const orderDoc = new OrderModel(orderObj);
                 try {
                   createdOrder = await orderDoc.save({ session: sessionDb });
+                  
+                  // Giảm số lượng hàng tồn kho - sử dụng items từ metadata
+                  let itemsToReduce: any[] = [];
+                  if ((full as any).metadata?.items) {
+                    try {
+                      itemsToReduce = JSON.parse((full as any).metadata.items);
+                    } catch (e) {
+                      req.log?.warn?.({ err: e }, 'Failed to parse items from metadata in fallback');
+                    }
+                  }
+                  
+                  // Fallback: dùng normalizedItems nếu không có trong metadata
+                  if (!itemsToReduce.length) {
+                    itemsToReduce = normalizedItems.map((it: any) => ({ productId: it.productId, quantity: it.quantity, name: it.name }));
+                  }
+                  
+                  for (const item of itemsToReduce) {
+                    if (item.productId && mongoose.Types.ObjectId.isValid(String(item.productId))) {
+                      const result = await ProductModel.findByIdAndUpdate(
+                        item.productId,
+                        { $inc: { stock: -(item.quantity || 1) } },
+                        { new: true, session: sessionDb }
+                      );
+                      req.log?.info?.({ productId: item.productId, quantity: item.quantity, newStock: result?.stock }, 'Stock reduced for product');
+                    } else if (item.name) {
+                      // Fallback: tìm product theo tên
+                      const product = await ProductModel.findOne({ name: item.name }).session(sessionDb);
+                      if (product) {
+                        await ProductModel.findByIdAndUpdate(
+                          product._id,
+                          { $inc: { stock: -(item.quantity || 1) } },
+                          { new: true, session: sessionDb }
+                        );
+                        req.log?.info?.({ productName: item.name, quantity: item.quantity }, 'Stock reduced for product by name');
+                      }
+                    }
+                  }
+                  req.log?.info?.({ orderId: orderDoc._id, itemsProcessed: itemsToReduce.length }, 'Stock reduced for all items in new order');
                 } catch (err) {
                   // Nếu lỗi duplicate key, không tạo lại đơn hàng
                   if (err && (err as any).code === 11000) {
